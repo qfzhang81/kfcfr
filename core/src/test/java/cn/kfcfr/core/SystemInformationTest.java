@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class SystemInformationTest {
     @Test
     public void getLocalInetAddress() throws Exception {
-        InetAddress rst = SystemInformation.getLocalInetAddress();
+        InetAddress rst = SystemInformation.getLocalNetAddress();
         System.out.println(rst);
         assertThat("没有获取本机地址", rst, is(notNullValue()));
     }
