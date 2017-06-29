@@ -5,5 +5,6 @@ package cn.kfcfr.core.generator.id;
  */
 public interface IGenerateLong {
     long getOne();
+
     long[] getList(int length);
 }

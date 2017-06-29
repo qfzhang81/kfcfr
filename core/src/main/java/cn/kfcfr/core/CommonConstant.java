@@ -3,6 +3,7 @@ package cn.kfcfr.core;
 /**
  * Created by zhangqf on 2017/6/8.
  */
+@SuppressWarnings(value = {"unchecked", "all"})
 public class CommonConstant {
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd hh24:mm:ss.SSS";
     public static final String DATETIME_FORMAT = "yyyy-MM-dd hh24:mm:ss";

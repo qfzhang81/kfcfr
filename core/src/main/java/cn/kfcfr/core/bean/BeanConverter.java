@@ -1,5 +1,7 @@
 package cn.kfcfr.core.bean;
 
+import cn.kfcfr.core.pagination.PagedList;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -81,5 +83,27 @@ public abstract class BeanConverter<T1, T2> {
      */
     public T2 convertT1ToT2(T1 t1) throws ReflectiveOperationException {
         return BeanConvert.cast(getT1Class(), getT2Class(), t1);
+    }
+
+    /***
+     * T2分页列表转成T1分页列表
+     * @param t2paged T2分页列表
+     * @return T1分页列表
+     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
+     */
+    public PagedList<T1> pagedT2ToT1(PagedList<T2> t2paged) throws ReflectiveOperationException {
+        List<T1> t1List = BeanConvert.castList(getT2Class(), getT1Class(), t2paged.getList());
+        return new PagedList<>(t1List, t2paged.getTotal(), t2paged.getPagedBounds());
+    }
+
+    /***
+     * T1分页列表转成T2分页列表
+     * @param t1paged T1分页列表
+     * @return T2分页列表
+     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
+     */
+    public PagedList<T2> pagedT1ToT2(PagedList<T1> t1paged) throws ReflectiveOperationException {
+        List<T2> t1List = BeanConvert.castList(getT1Class(), getT2Class(), t1paged.getList());
+        return new PagedList<>(t1List, t1paged.getTotal(), t1paged.getPagedBounds());
     }
 }

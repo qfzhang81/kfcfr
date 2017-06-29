@@ -10,7 +10,6 @@ import java.io.Serializable;
 public class SortCondition implements Serializable {
     private static final long serialVersionUID = 8571279905568628839L;
     private String sortLogicName;
-//    private String sortPhysicalName;
     private SortDirection sortDirection;
 
     public SortCondition() {
@@ -30,14 +29,6 @@ public class SortCondition implements Serializable {
         this.sortLogicName = sortLogicName;
     }
 
-//    public String getSortPhysicalName() {
-//        return sortPhysicalName;
-//    }
-//
-//    public void setSortPhysicalName(String sortPhysicalName) {
-//        this.sortPhysicalName = sortPhysicalName;
-//    }
-
     public SortDirection getSortDirection() {
         return sortDirection;
     }
@@ -47,9 +38,8 @@ public class SortCondition implements Serializable {
     }
 
     @Override
-    public String toString()
-    {
-        if(StringUtils.isEmpty(sortLogicName)) return "";
-        return sortLogicName+" "+(sortDirection==SortDirection.DESC ? "desc" : "asc");
+    public String toString() {
+        if (StringUtils.isEmpty(sortLogicName)) return "";
+        return sortLogicName + " " + (sortDirection == SortDirection.DESC ? "desc" : "asc");
     }
 }

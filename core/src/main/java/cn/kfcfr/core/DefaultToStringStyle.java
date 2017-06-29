@@ -17,7 +17,6 @@ public class DefaultToStringStyle extends ToStringStyle {
         if (value instanceof Date) {
             value = dateTimeFormat.format(value);
         }
-        //buffer.append(value);
         super.appendDetail(buffer, fieldName, value);
     }
 }

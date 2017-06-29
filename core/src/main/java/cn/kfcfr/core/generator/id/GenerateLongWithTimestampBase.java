@@ -38,7 +38,7 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
      * @param seqLength 设定顺序号长度。Null表示使用默认
      * @param cusWorkerId 设定自定义的工作号。Null表示使用默认
      */
-    public GenerateLongWithTimestampBase(String timestampFormat,Integer seqLength, Integer cusWorkerId) {
+    public GenerateLongWithTimestampBase(String timestampFormat, Integer seqLength, Integer cusWorkerId) {
         if (seqLength != null && seqLength <= 0) {
             throw new IllegalArgumentException("seqLength must be a integer and greater than 0.");
         }
@@ -47,7 +47,7 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
         }
         this.timestampFormat = timestampFormat;
         this.seqLength = seqLength;
-        this.cusWorkerId=cusWorkerId;
+        this.cusWorkerId = cusWorkerId;
     }
 
     /***
