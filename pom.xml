@@ -15,6 +15,7 @@
         <module>ztestdao</module>
         <module>ztestweb</module>
         <module>ztestmodel</module>
+        <module>ztestbusiness</module>
     </modules>
 
     <properties>
