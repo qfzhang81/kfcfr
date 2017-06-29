@@ -1,0 +1,21 @@
+<assembly>
+    <id>db3</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources/db/common</directory>
+            <outputDirectory></outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources/db/db3</directory>
+            <includes>
+                <include>datasource/**/*.*</include>
+                <include>conf/**/*-${profiles.activation}.*</include>
+            </includes>
+            <outputDirectory></outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>

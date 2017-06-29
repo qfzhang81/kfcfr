@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="classpath*:**/datasource/abstractXADataSource.xml" />
+    <import resource="classpath*:**/mybatis/pagehelper.xml" />
+    <context:property-placeholder ignore-resource-not-found="true"
+        location="classpath*:**/conf/db2DataSource-*.properties" />
+
+    <bean id="db2DataSource" parent="abstractXADataSource">
+        <property name="uniqueResourceName" value="masterDB" />
+        <property name="testQuery" value="${db.validationQuery}"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="driverClassName">${db.xa.driverClassName}</prop>
+                <prop key="url">${db.xa.url}</prop>
+                <prop key="username">${db.xa.username}</prop>
+                <prop key="password">${db.xa.password}</prop>
+                <prop key="initialSize">${db.xa.initialSize}</prop>
+                <prop key="maxActive">${db.xa.maxActive}</prop> <!-- 若不配置则代码执行"{dataSource-1} inited"此处停止  -->
+                <prop key="minIdle">${db.xa.minIdle}</prop>
+                <prop key="maxWait">${db.xa.maxWait}</prop>
+                <prop key="validationQuery">${db.validationQuery}</prop>
+                <prop key="testOnBorrow">${db.xa.testOnBorrow}</prop>
+                <prop key="testOnReturn">${db.xa.testOnReturn}</prop>
+                <prop key="testWhileIdle">${db.xa.testWhileIdle}</prop>
+                <prop key="removeAbandoned">${db.xa.removeAbandoned}</prop>
+                <prop key="removeAbandonedTimeout">${db.xa.removeAbandonedTimeout}</prop>
+                <prop key="logAbandoned">${db.xa.logAbandoned}</prop>
+                <prop key="filters">${db.xa.filters}</prop>
+                <!-- 有两个含义：1) Destroy线程会检测连接的间隔时间 2) testWhileIdle的判断依据，详细看testWhileIdle属性的说明 -->
+                <prop key="timeBetweenEvictionRunsMillis">${db.xa.timeBetweenEvictionRunsMillis}</prop>
+                <!-- Destory线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接 -->
+                <prop key="minEvictableIdleTimeMillis">${db.xa.minEvictableIdleTimeMillis}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="db2SessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="db2DataSource" />
+        <property name="mapperLocations" value="classpath*:mappers/mapper.xml" />
+        <property name="plugins">
+            <array>
+                <ref bean="mybatisPage" />
+            </array>
+        </property>
+    </bean>
+
+</beans>
