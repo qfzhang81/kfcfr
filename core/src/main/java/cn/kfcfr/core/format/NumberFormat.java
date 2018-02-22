@@ -15,4 +15,13 @@ public class NumberFormat {
         return String.format("%0" + length + "d", value);
     }
 
+    public static String format4Original(Integer value) {
+        if (value == null) return "";
+        return value.toString();
+    }
+
+    public static String format4Original(Long value) {
+        if (value == null) return "";
+        return value.toString();
+    }
 }

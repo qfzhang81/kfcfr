@@ -2,6 +2,7 @@ package cn.kfcfr.persistence.mybatis.mapper;
 
 import tk.mybatis.mapper.common.BaseMapper;
 import tk.mybatis.mapper.common.ExampleMapper;
+import tk.mybatis.mapper.common.IdsMapper;
 import tk.mybatis.mapper.common.ids.DeleteByIdsMapper;
 
 /**
@@ -9,5 +10,6 @@ import tk.mybatis.mapper.common.ids.DeleteByIdsMapper;
  */
 public interface CommonCrudMapper<T> extends BaseMapper<T>
         , ExampleMapper<T>
-        , DeleteByIdsMapper<T> {
+        , DeleteByIdsMapper<T>
+        , IdsMapper<T> {
 }

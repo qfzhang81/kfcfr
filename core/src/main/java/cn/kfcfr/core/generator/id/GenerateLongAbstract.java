@@ -1,6 +1,10 @@
 package cn.kfcfr.core.generator.id;
 
+import cn.kfcfr.core.generator.LongRange;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 生成总长度19位的全局ID。由各算法继承该类实现
@@ -61,40 +65,60 @@ public abstract class GenerateLongAbstract implements IGenerateLong {
 
     @Override
     public long getOne() {
-        long[] list = getList(1);
-        return list[0];
+        List<LongRange> list = getList(1);
+        return list.get(0).getFrom();
     }
 
     @Override
-    public long[] getList(int length) {
+    public List<LongRange> getList(int length) {
         if (length <= 0) {
             throw new IllegalArgumentException("length must be a integer and greater than 0.");
         }
         if (!checkIsValid() && invalidEx != null) {
             throw invalidEx;
         }
-        long[] list = new long[length];
+        RuntimeException notExpectedEx = null;
+        List<LongRange> list = new ArrayList<>();
         synchronized (this) {
-            long ts = createTs(new Date());
-            processTs(ts);
-            for (int i = 0; i < length; i++) {
-                seq++;
-                if (seq > maxSeq) {
-                    while (lastTs == ts) {
-                        try {
-                            Thread.sleep(600);
-                        }
-                        catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        ts = createTs(new Date());
-                    }
+            long ts;
+            long thisAssign;
+            int assigned = 0;
+            while (assigned < length) {
+                try {
+                    ts = createTs(new Date());
                     processTs(ts);
-                    seq++;
+                    if (seq < maxSeq) {
+                        if ((length - assigned) > (maxSeq - seq)) {
+                            //本轮seq范围分配不够，先分配一部分
+                            thisAssign = maxSeq - seq;
+                        }
+                        else {
+                            //seq范围足够
+                            thisAssign = length - assigned;
+                        }
+                        //记录分配的号码
+                        LongRange longRange = new LongRange();
+                        longRange.setFrom(makeupOne(ts, seq + 1));
+                        longRange.setTo(makeupOne(ts, seq + thisAssign));
+                        list.add(longRange);
+                        //更新变量
+                        assigned += thisAssign;
+                        seq += thisAssign;
+                    }
+                    if (assigned >= length) {
+                        break;
+                    }
+                    //等待指定时间后继续生成
+                    sleepInGenerate();
                 }
-                list[i] = makeupOne(ts, seq);
+                catch (Exception ex) {
+                    //发生错误，记录并退出生成
+                    notExpectedEx = new RuntimeException("Error occurred in while when generating id.", ex);
+                    break;
+                }
             }
         }
+        if (notExpectedEx != null) throw notExpectedEx;
         return list;
     }
 
@@ -125,6 +149,8 @@ public abstract class GenerateLongAbstract implements IGenerateLong {
      * @return 时间部分
      */
     protected abstract long createTs(Date date);
+
+    protected abstract void sleepInGenerate() throws InterruptedException;
 
     /***
      * 组合成一个ID

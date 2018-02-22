@@ -39,6 +39,12 @@ public class MapperUtil implements Serializable {
         this.mapConverter = mapConverter;
     }
 
+    public MapperUtil() {}
+    public MapperUtil(IPagedUtil pagedUtil, EntityColumnMapConverter mapConverter) {
+        this.pagedUtil = pagedUtil;
+        this.mapConverter = mapConverter;
+    }
+
     public <T> int add(BaseInsertMapper<T> dao , T entity, boolean ignoreNullField) {
         int affected;
         if (ignoreNullField) {
@@ -83,10 +89,25 @@ public class MapperUtil implements Serializable {
         return dao.selectByExample(search);
     }
 
+    public <T> List<T> getList(Class<T> clazz, SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
+        Example search = new Example(clazz);
+        initExampleCriteria(search, searchConditions);
+        return dao.selectByExample(search);
+    }
+
     public <T> PagedList<T> getPagedList(RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
         Example search = new Example(getEntityClass(dao));
         initExampleCriteria(search, searchConditions);
-        initExampleOrderBy(search, pagedBounds);
+        initExampleOrderBy(search, pagedBounds, false);
+        RowBounds rowBounds = pagedUtil.convertToRowBounds(pagedBounds);
+        List<T> list = dao.selectByExampleAndRowBounds(search, rowBounds);
+        return pagedUtil.convertToPagedList(list, pagedBounds);
+    }
+
+    public <T> PagedList<T> getPagedList(Class<T> clazz, RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
+        Example search = new Example(clazz);
+        initExampleCriteria(search, searchConditions);
+        initExampleOrderBy(search, pagedBounds, false);
         RowBounds rowBounds = pagedUtil.convertToRowBounds(pagedBounds);
         List<T> list = dao.selectByExampleAndRowBounds(search, rowBounds);
         return pagedUtil.convertToPagedList(list, pagedBounds);
@@ -149,10 +170,10 @@ public class MapperUtil implements Serializable {
     }
 
     protected String formatLikeString(Object value, String prefix, String suffix) {
-        return " '" + prefix + value.toString() + suffix + "' ";
+        return prefix + value.toString() + suffix;
     }
 
-    protected void initExampleOrderBy(Example example, PagedBounds pagedBounds) {
+    protected void initExampleOrderBy(Example example, PagedBounds pagedBounds, boolean logicName2ColumnName) {
         if(pagedBounds == null || example == null) return;
         Example.OrderBy orderBy = null;
         boolean isFirst = true;
@@ -160,7 +181,10 @@ public class MapperUtil implements Serializable {
             if(sortField == null || StringUtils.isEmpty(sortField.getSortLogicName())) {
                 continue;
             }
-            String columnName = mapConverter.getEntityColumnName(example.getEntityClass(), sortField.getSortLogicName());
+            String columnName = sortField.getSortLogicName();
+            if (logicName2ColumnName) {
+                columnName = mapConverter.getEntityColumnName(example.getEntityClass(), sortField.getSortLogicName());
+            }
             if(isFirst) {
                 orderBy = example.orderBy(columnName);
                 isFirst = false;

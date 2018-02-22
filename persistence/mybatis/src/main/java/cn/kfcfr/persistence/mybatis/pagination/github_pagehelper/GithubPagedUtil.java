@@ -19,6 +19,14 @@ public class GithubPagedUtil implements IPagedUtil {
         this.offsetAsPageNum = offsetAsPageNum;
     }
 
+    public GithubPagedUtil() {
+        offsetAsPageNum = true;
+    }
+
+    public GithubPagedUtil(boolean offsetAsPageNum) {
+        this.offsetAsPageNum = offsetAsPageNum;
+    }
+
     @Override
     public RowBounds convertToRowBounds(PagedBounds pagedBounds) {
         if (pagedBounds == null) return new RowBounds();
