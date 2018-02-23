@@ -1,16 +1,17 @@
 package cn.kfcfr.core.generator.id;
 
-import cn.kfcfr.core.SystemInformation;
-import cn.kfcfr.core.format.NumberFormat;
+import cn.kfcfr.core.convert.IntegerConvert;
+import cn.kfcfr.core.convert.LongConvert;
 import cn.kfcfr.core.math.IntCalc;
 import cn.kfcfr.core.math.LongCalc;
+import cn.kfcfr.core.system.SystemInformation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static cn.kfcfr.core.CommonConstant.DATETIME_12_FORMAT;
+import static cn.kfcfr.core.constant.DateTimeConstant.DATETIME_12_FORMAT;
 
 /**
  * 生成总长度19位的全局ID，默认由12位时间+2位工作号(IPv4地址最后2位)+5位顺序号生成
@@ -113,7 +114,7 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
         if (workerIdLength > 0) {
             if (cusWorkerId != null) {
                 //使用设定的workerId
-                workerId = NumberFormat.decimalPadLeft(cusWorkerId, workerIdLength);
+                workerId = IntegerConvert.padLeft(cusWorkerId, workerIdLength);
             }
             else {
                 //自动生成workerId
@@ -129,8 +130,13 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
     }
 
     @Override
+    protected void sleepInGenerate() throws InterruptedException {
+        Thread.sleep(1000);
+    }
+
+    @Override
     protected long makeupOne(long ts, long seq) {
-        return Long.parseLong(String.valueOf(ts) + workerId + NumberFormat.decimalPadLeft(seq, seqLength));
+        return Long.parseLong(String.valueOf(ts) + workerId + LongConvert.padLeft(seq, seqLength));
     }
 
     /***
@@ -145,7 +151,7 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
 //                    for (String anIp4 : ip4) {
 //                        machineIdStr += NumberFormat.decimalPadLeft(Integer.valueOf(anIp4), 3);
 //                    }
-            machineIdStr = NumberFormat.decimalPadLeft(Integer.valueOf(ip4[ip4.length - 1]), 3);
+            machineIdStr = IntegerConvert.padLeft(Integer.valueOf(ip4[ip4.length - 1]), 3);
         }
         else {
             //按机器名的hashcode生成
@@ -160,7 +166,7 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
             if (processIdStr.length() > processIdLength) {
                 processId = processId % IntCalc.powDecimal(10, processIdLength);
             }
-            workerId = machineIdStr + NumberFormat.decimalPadLeft(processId, processIdLength);
+            workerId = machineIdStr + IntegerConvert.padLeft(processId, processIdLength);
         }
         else {
             workerId = machineIdStr.substring(0 - processIdLength, machineIdStr.length());

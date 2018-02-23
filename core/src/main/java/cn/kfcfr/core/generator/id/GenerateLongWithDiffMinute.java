@@ -1,5 +1,7 @@
 package cn.kfcfr.core.generator.id;
 
+import java.util.Date;
+
 /**
  * 生成总长度19位的全局ID，由1bit固定0+24bit时间戳+10bit机器名hashcode+10bit进程id+19bit顺序号生成
  * 用于ID需求量中等，一台服务器会部署多个应用
@@ -18,6 +20,11 @@ public class GenerateLongWithDiffMinute extends GenerateLongWithDiffBase {
      */
     public GenerateLongWithDiffMinute(Integer cusWorkerId) {
         super(null, 60000, 24, 19, 10, cusWorkerId);
+        checkIsValid();
+    }
+
+    public GenerateLongWithDiffMinute(Date startDiff, Integer cusWorkerId) {
+        super(startDiff, 60000, 24, 19, 10, cusWorkerId);
         checkIsValid();
     }
 }

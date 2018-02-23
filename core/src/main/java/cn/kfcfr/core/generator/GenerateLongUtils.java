@@ -19,9 +19,16 @@ public interface GenerateLongUtils {
     /***
      * 根据当前时间生成多个带时间的顺序ID
      * @param length 顺序ID个数
-     * @return long型ID的数组
+     * @return long型ID的列表
      */
     List<LongRange> generateList(int length);
+
+    /***
+     * 根据当前时间生成多个带时间的顺序ID
+     * @param length 顺序ID个数
+     * @return long型ID的数组
+     */
+    long[] generateArray(int length);
 
     /***
      * 根据规则生成不重复的顺序ID，并填充到对象列表的指定属性名

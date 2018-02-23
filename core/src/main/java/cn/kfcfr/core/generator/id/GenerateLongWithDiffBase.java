@@ -1,6 +1,6 @@
 package cn.kfcfr.core.generator.id;
 
-import cn.kfcfr.core.SystemInformation;
+import cn.kfcfr.core.system.SystemInformation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
@@ -118,6 +118,11 @@ public class GenerateLongWithDiffBase extends GenerateLongAbstract {
     @Override
     protected long createTs(Date date) {
         return (new Date().getTime() - this.startTs) / timestampConversion;
+    }
+
+    @Override
+    protected void sleepInGenerate() throws InterruptedException {
+        Thread.sleep(1000);
     }
 
     @Override

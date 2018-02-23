@@ -3,8 +3,6 @@ package cn.kfcfr.core.generator;
 import java.io.Serializable;
 
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
-@ToString
-@EqualsAndHashCode
 public class LongRange implements Serializable {
     private static final long serialVersionUID = -8064443761486442883L;
     private long from;

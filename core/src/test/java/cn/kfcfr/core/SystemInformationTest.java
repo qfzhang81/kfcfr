@@ -1,11 +1,13 @@
 package cn.kfcfr.core;
 
+import cn.kfcfr.core.system.SystemInformation;
 import org.junit.Test;
 
 import java.net.InetAddress;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by zhangqf on 2017/6/10.

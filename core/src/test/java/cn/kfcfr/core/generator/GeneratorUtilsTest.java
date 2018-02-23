@@ -11,17 +11,19 @@ import static org.junit.Assert.*;
 public class GeneratorUtilsTest {
     @Test
     public void generateLong() throws Exception {
-        long aaa = GeneratorUtils.generateLong();
-        System.out.println("generateLong:"+aaa);
+        GenerateLongUtils generator = new GenerateLongUtilsImpl(2016, 1, 1, "8088");
+        long aaa = generator.generateOne();
+        System.out.println("generateLong:" + aaa);
         assertThat("生成失败", aaa, greaterThan(0L));
     }
 
     @Test
     public void generateLongList() throws Exception {
+        GenerateLongUtils generator = new GenerateLongUtilsImpl(2016, 1, 1, "8088");
         int length = 3;
-        long aaa[] = GeneratorUtils.generateLongList(length);
-        System.out.println("generateLongList.first:"+aaa[0]);
-        System.out.println("generateLongList.last:"+aaa[length-1]);
+        long aaa[] = generator.generateArray(length);
+        System.out.println("generateLongList.first:" + aaa[0]);
+        System.out.println("generateLongList.last:" + aaa[length - 1]);
 //        for(long aa : aaa) {
 //            System.out.println("generateLongList:"+aa);
 //        }
@@ -30,6 +32,7 @@ public class GeneratorUtilsTest {
 
     @Test
     public void generateLongList_overflow() throws Exception {
+        GenerateLongUtils generator = new GenerateLongUtilsImpl(2016, 1, 1, "8088");
         int length = 150000;
 //        try {
 //            long aaa[] = GeneratorUtils.generateLongList(length);
@@ -39,9 +42,9 @@ public class GeneratorUtilsTest {
 //            ex.printStackTrace();
 //            assertThat(ex.getMessage(), containsString("length cannot greater than"));
 //        }
-        long aaa[] = GeneratorUtils.generateLongList(length);
-        System.out.println("generateLongList_overflow.first:"+aaa[0]);
-        System.out.println("generateLongList_overflow.last:"+aaa[length-1]);
+        long aaa[] = generator.generateArray(length);
+        System.out.println("generateLongList_overflow.first:" + aaa[0]);
+        System.out.println("generateLongList_overflow.last:" + aaa[length - 1]);
 //        for(long aa : aaa) {
 //            System.out.println("generateLongList:"+aa);
 //        }
@@ -50,11 +53,12 @@ public class GeneratorUtilsTest {
 
     @Test
     public void generateLongList_2nd() throws Exception {
+        GenerateLongUtils generator = new GenerateLongUtilsImpl(2016, 1, 1, "8088");
         int length = 80000;
         System.out.println("generateLongList_2nd:1st");
-        long aaa[] = GeneratorUtils.generateLongList(length);
-        System.out.println("generateLongList_2nd.first:"+aaa[0]);
-        System.out.println("generateLongList_2nd.last:"+aaa[length-1]);
+        long aaa[] = generator.generateArray(length);
+        System.out.println("generateLongList_2nd.first:" + aaa[0]);
+        System.out.println("generateLongList_2nd.last:" + aaa[length - 1]);
 //        for(long aa : aaa) {
 //            System.out.println("generateLongList_2nd:"+aa);
 //        }
@@ -62,9 +66,9 @@ public class GeneratorUtilsTest {
         //2nd
         length = 60000;
         System.out.println("generateLongList_2nd:2nd");
-        aaa = GeneratorUtils.generateLongList(length);
-        System.out.println("generateLongList_2nd.first:"+aaa[0]);
-        System.out.println("generateLongList_2nd.last:"+aaa[length-1]);
+        aaa = generator.generateArray(length);
+        System.out.println("generateLongList_2nd.first:" + aaa[0]);
+        System.out.println("generateLongList_2nd.last:" + aaa[length - 1]);
 //        for(long aa : aaa) {
 //            System.out.println("generateLongList_2nd:"+aa);
 //        }
