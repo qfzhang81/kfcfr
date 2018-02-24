@@ -1,5 +1,6 @@
 package cn.kfcfr.persistence.mybatis.datasource;
 
+import cn.kfcfr.persistence.common.datasource.DataSourceType;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import java.util.concurrent.atomic.AtomicInteger;

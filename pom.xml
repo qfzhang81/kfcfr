@@ -17,6 +17,7 @@
         <module>ztestmodel</module>
         <module>ztestbusiness</module>
         <module>ztestresource</module>
+        <module>ztestcommon</module>
     </modules>
 
     <properties>
@@ -33,6 +34,11 @@
         <junit.version>4.12</junit.version>
         <commons.lang3.version>3.4</commons.lang3.version>
         <commons.logging.version>1.2</commons.logging.version>
+        <commons.math.version>2.2</commons.math.version>
+        <commons.jxpath.version>1.3</commons.jxpath.version>
+        <commons.configuration.version>1.10</commons.configuration.version>
+        <commons.codec.version>1.10</commons.codec.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <javaee.version>7.0</javaee.version>
         <jta.version>1.1</jta.version>
@@ -41,16 +47,17 @@
         <groovy.version>2.4.6</groovy.version>
         <ognl.version>3.2.2</ognl.version>
         <unbescape.version>1.1.5.RELEASE</unbescape.version>
-        <slf4j.version>1.7.22</slf4j.version>
-        <log4j.version>2.4.1</log4j.version>
-        <spring.version>4.3.6.RELEASE</spring.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <log4j.version>2.8.1</log4j.version>
+        <!--<logback.version>1.2.3</logback.version>-->
+        <!--<jboss.logging.version>3.3.1.Final</jboss.logging.version>-->
         <aspectj.version>1.8.9</aspectj.version>
-        <mybatis.version>3.4.0</mybatis.version>
+        <mybatis.version>3.4.5</mybatis.version>
         <mybatis.spring.version>1.3.1</mybatis.spring.version>
-        <mybatis.mapper.version>3.4.0</mybatis.mapper.version>
+        <mybatis.mapper.version>3.4.3</mybatis.mapper.version>
         <mybatis.generator.version>1.3.5</mybatis.generator.version>
-        <mybatis.pager.version>5.0.2</mybatis.pager.version>
-        <mysql.driver.version>5.1.36</mysql.driver.version>
+        <mybatis.pager.version>5.1.0</mybatis.pager.version>
+        <mysql.driver.version>5.1.43</mysql.driver.version>
         <oracle.driver.version>12.1.0.2</oracle.driver.version>
         <druid.version>1.0.20</druid.version>
         <atomikos.version>4.0.4</atomikos.version>
@@ -58,8 +65,99 @@
         <attoparser.version>2.0.4.RELEASE</attoparser.version>
         <thymeleaf.version>3.0.5.RELEASE</thymeleaf.version>
         <thymeleaf.layout.version>2.2.1</thymeleaf.layout.version>
-        <jackson.version>2.8.2</jackson.version>
+        <jackson.version>2.8.9</jackson.version>
+
+        <spring.version>4.3.10.RELEASE</spring.version>
+        <spring.boot.version>1.5.4.RELEASE</spring.boot.version>
+        <spring.cloud.version>Dalston.SR3</spring.cloud.version>
+        <spring.security.rsa>1.0.5.RELEASE</spring.security.rsa>
+        <spring.security.crypto>4.2.3.RELEASE</spring.security.crypto>
+        <ribbon.version>2.2.2</ribbon.version>
+        <netflix.version>0.3.0</netflix.version>
+        <hystrix.version>1.5.12</hystrix.version>
+        <eureka.version>1.7.0</eureka.version>
+        <servo.core.version>0.12.17</servo.core.version>
+        <servo.internal.version>0.10.1</servo.internal.version>
+        <fastjson-version>1.2.15</fastjson-version>
+        <javax.mail.version>1.4.7</javax.mail.version>
+
+        <mybatis.spring.boot.version>1.3.1</mybatis.spring.boot.version>
+        <mybatis.mapper.spring.boot.version>1.1.4</mybatis.mapper.spring.boot.version>
+        <mybatis.pager.spring.boot.version>1.2.0</mybatis.pager.spring.boot.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy todir="${project.build.directory}" overwrite="true">
+                                            <fileset dir="${basedir}/src/main/resources/run" erroronmissingdir="false">
+                                                <include name="*.bat" />
+                                                <include name="*.conf" />
+                                            </fileset>
+                                        </copy>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>local</id>
+            <!--<activation>-->
+            <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
+            <properties>
+                <profileActive>local</profileActive>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy todir="${project.build.directory}" overwrite="true">
+                                            <fileset dir="${basedir}/src/main/resources/run" erroronmissingdir="false">
+                                                <include name="*.bat" />
+                                                <include name="*.conf" />
+                                            </fileset>
+                                        </copy>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!--单元测试依赖，开发的时候引入，发布的时候不会加载 -->
@@ -140,6 +238,11 @@
                 <artifactId>jsqlparser</artifactId>
                 <version>${jsqlparser.version}</version>
             </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>${javax.mail.version}</version>
+            </dependency>
 
             <!-- Log -->
             <dependency>
@@ -172,6 +275,11 @@
                 <artifactId>log4j-web</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.bgee.log4jdbc-log4j2</groupId>
+                <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+                <version>1.16</version>
+            </dependency>
 
             <!-- spring -->
             <dependency>
@@ -182,6 +290,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -197,6 +310,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -218,6 +336,155 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- spring boot -->
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring.boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!-- spring cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon</artifactId>
+                <version>${ribbon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-core</artifactId>
+                <version>${ribbon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-eureka</artifactId>
+                <version>${ribbon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-loadbalancer</artifactId>
+                <version>${ribbon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-httpclient</artifactId>
+                <version>${ribbon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-transport</artifactId>
+                <version>${ribbon.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.netflix-commons</groupId>
+                <artifactId>netflix-statistics</artifactId>
+                <version>${netflix.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.netflix-commons</groupId>
+                <artifactId>netflix-infix</artifactId>
+                <version>${netflix.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.netflix-commons</groupId>
+                <artifactId>netflix-eventbus</artifactId>
+                <version>${netflix.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.netflix-commons</groupId>
+                <artifactId>netflix-commons-util</artifactId>
+                <version>${netflix.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.hystrix</groupId>
+                <artifactId>hystrix-core</artifactId>
+                <version>${hystrix.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.eureka</groupId>
+                <artifactId>eureka-core</artifactId>
+                <version>${eureka.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.eureka</groupId>
+                <artifactId>eureka-client</artifactId>
+                <version>${eureka.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.servo</groupId>
+                <artifactId>servo-core</artifactId>
+                <version>${servo.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.servo</groupId>
+                <artifactId>servo-internal</artifactId>
+                <version>${servo.internal.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- spring security -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-rsa</artifactId>
+                <version>${spring.security.rsa}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-crypto</artifactId>
+                <version>${spring.security.crypto}</version>
             </dependency>
 
             <!-- AOP -->
@@ -252,6 +519,37 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper</artifactId>
                 <version>${mybatis.pager.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
+                <version>${mybatis.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-autoconfigure</artifactId>
+                <version>${mybatis.mapper.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${mybatis.mapper.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-autoconfigure</artifactId>
+                <version>${mybatis.pager.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${mybatis.pager.spring.boot.version}</version>
             </dependency>
 
             <!-- DB驱动 -->
@@ -347,32 +645,25 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
-        <profile>
-            <id>develop</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <profiles.activation>dev</profiles.activation>
-            </properties>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <profiles.activation>test</profiles.activation>
-            </properties>
-        </profile>
-        <profile>
-            <id>product</id>
-            <properties>
-                <profiles.activation>prod</profiles.activation>
-            </properties>
-        </profile>
-    </profiles>
-
     <build>
         <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>config/*.*</exclude>
+                    <exclude>run/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>config/*-${profileActive}.*</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -411,17 +702,27 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-source-plugin</artifactId>-->
+            <!--<version>3.0.1</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<phase>package</phase>-->
+            <!--<goals>-->
+            <!--<goal>jar</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -435,15 +736,118 @@
                             <manifestEntries>
                                 <Build-Time>${project.build.timestamp.utc}</Build-Time>
                                 <Specification-Name>${project.groupId}.${project.artifactId}</Specification-Name>
-                                <Specification-Version>${project.build.version}</Specification-Version>
+                                <Specification-Version>${project.version}</Specification-Version>
                             </manifestEntries>
                         </archive>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                            </manifest>
+                        </archive>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <includeEmptyDirectories>true</includeEmptyDirectories>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.3</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <shadedArtifactAttached>true</shadedArtifactAttached>
+                                <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                                <transformers>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.handlers</resource>
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.schemas</resource>
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.tooling</resource>
+                                    </transformer>
+                                </transformers>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!--<plugin>-->
+                <!--<groupId>org.mybatis.generator</groupId>-->
+                <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
+                <!--<version>${mybatis.generator.version}</version>-->
+                <!--<dependencies>-->
+                <!--<dependency>-->
+                <!--<groupId>org.mybatis.generator</groupId>-->
+                <!--<artifactId>mybatis-generator-core</artifactId>-->
+                <!--<version>${mybatis.generator.version}</version>-->
+                <!--</dependency>-->
+                <!--<dependency>-->
+                <!--<groupId>mysql</groupId>-->
+                <!--<artifactId>mysql-connector-java</artifactId>-->
+                <!--<version>${mysql.driver.version}</version>-->
+                <!--</dependency>-->
+                <!--</dependencies>-->
+                <!--<executions>-->
+                <!--<execution>-->
+                <!--<id>Generate MyBatis Artifacts</id>-->
+                <!--<goals>-->
+                <!--<goal>generate</goal>-->
+                <!--</goals>-->
+                <!--</execution>-->
+                <!--</executions>-->
+                <!--</plugin>-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.20</version>
+                    <configuration>
+                        <skipTests>true</skipTests>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                    <configuration>
+                        <updateReleaseInfo>true</updateReleaseInfo>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <tasks>
+                                    <copy todir="${project.build.directory}" overwrite="true">
+                                        <fileset dir="${basedir}/src/main/resources/run" erroronmissingdir="false">
+                                            <include name="*.sh" />
+                                        </fileset>
+                                    </copy>
+                                </tasks>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

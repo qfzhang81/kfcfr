@@ -1,5 +1,6 @@
 package cn.kfcfr.persistence.mybatis.datasource;
 
+import cn.kfcfr.persistence.common.datasource.DataSourceType;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;

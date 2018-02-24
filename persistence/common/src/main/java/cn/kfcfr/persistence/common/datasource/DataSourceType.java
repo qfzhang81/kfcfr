@@ -1,4 +1,4 @@
-package cn.kfcfr.persistence.mybatis.datasource;
+package cn.kfcfr.persistence.common.datasource;
 
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
 public enum DataSourceType {

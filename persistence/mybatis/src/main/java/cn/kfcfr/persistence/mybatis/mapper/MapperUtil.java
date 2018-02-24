@@ -1,6 +1,6 @@
 package cn.kfcfr.persistence.mybatis.mapper;
 
-import cn.kfcfr.core.expression.PropertyCondition;
+import cn.kfcfr.core.pojo.PropertyCondition;
 import cn.kfcfr.core.pagination.PagedBounds;
 import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pagination.SortCondition;

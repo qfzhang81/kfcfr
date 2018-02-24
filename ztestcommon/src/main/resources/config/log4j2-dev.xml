@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug" monitorInterval="30">
+       <Properties>
+              <Property name="logpath">D:/Project_Java_Intellij/logs</Property>
+       </Properties>
+
+       <appenders>
+              <Console name="stdout" target="SYSTEM_OUT">
+                     <PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss}[%p][%C{1}] %m%n"/>
+              </Console>
+
+              <RollingRandomAccessFile name="err" fileName="${logpath}/ztest_error.log"
+                           filePattern="${logpath}/ztest_error-%d{yyyyMMdd}-%i.log"
+                           immediateFlush="true">
+                     <PatternLayout>
+                            <Pattern>%-d{yyyy-MM-dd HH:mm:ss.SSS} %-4r %-5p [%t] %37c %3x - %m%n</Pattern>
+                     </PatternLayout>
+                     <Policies>
+                            <TimeBasedTriggeringPolicy interval="1" />
+                            <SizeBasedTriggeringPolicy size="10 MB" />
+                     </Policies>
+                     <DefaultRolloverStrategy max="100" />
+                     <Filters>
+                            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+                     </Filters>
+              </RollingRandomAccessFile>
+              <RollingRandomAccessFile name="info" fileName="${logpath}/ztest_info.log"
+                           filePattern="${logpath}/ztest_info-%d{yyyyMMdd}-%i.log"
+                           immediateFlush="true">
+                     <PatternLayout>
+                            <Pattern>%-d{yyyy-MM-dd HH:mm:ss.SSS} %-4r %-5p [%t] %37c %3x - %m%n</Pattern>
+                     </PatternLayout>
+                     <Policies>
+                            <TimeBasedTriggeringPolicy interval="1" />
+                            <SizeBasedTriggeringPolicy size="10 MB" />
+                     </Policies>
+                     <DefaultRolloverStrategy max="100" />
+                     <Filters>
+                            <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+                     </Filters>
+              </RollingRandomAccessFile>
+              <RollingRandomAccessFile name="debug" fileName="${logpath}/ztest_debug.log"
+                           filePattern="${logpath}/ztest_debug-%d{yyyyMMdd}-%i.log"
+                           immediateFlush="true">
+                     <PatternLayout>
+                            <Pattern>%-d{yyyy-MM-dd HH:mm:ss.SSS} %-4r %-5p [%t] %37c %3x - %m%n</Pattern>
+                     </PatternLayout>
+                     <Policies>
+                            <TimeBasedTriggeringPolicy interval="1" />
+                            <SizeBasedTriggeringPolicy size="10 MB" />
+                     </Policies>
+                     <DefaultRolloverStrategy max="100" />
+              </RollingRandomAccessFile>
+       </appenders>
+       <loggers>
+              <root level="error">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="err"/>
+
+              </root>
+              <logger name="org.springframework.web" level="debug" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="org.springframework.jdbc.core" level="debug" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="jdbc.audit" level="off" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="jdbc.sqlonly" level="off" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="jdbc.sqltiming" level="debug" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="jdbc.connection" level="debug" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="jdbc.resultset" level="off" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="jdbc.resultsettable" level="off" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="cn.kfcfr.persistence" level="debug" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+              <logger name="cn.kfcfr.ztestcommon" level="debug" additivity="false">
+                     <appender-ref ref="stdout"/>
+                     <appender-ref ref="debug"/>
+                     <appender-ref ref="info"/>
+                     <appender-ref ref="err"/>
+              </logger>
+       </loggers>
+</configuration>

@@ -1,0 +1,77 @@
+server:
+  port: ${port:${PORT:8092}}
+spring:
+  application:
+    name: '${ms.name}'
+  jmx:
+    default-domain: '${ms.name}'
+#management:
+#  port: ${server.port}
+#  context-path: '/admin'
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka/'
+#    healthcheck:
+#      enabled: false
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+      cluster: prontera
+      instanceId: ${spring.cloud.client.ipAddress}:${server.port}:${random.value}
+      management:
+        port: ${management.port}
+        context-path: ${management.context-path}
+      health:
+        path: ${management.context-path}/health
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+
+jdbc:
+  datasource:
+    primary:
+      type: com.alibaba.druid.pool.DruidDataSource
+      writer:
+        driverClassName: 'net.sf.log4jdbc.sql.jdbcapi.DriverSpy'
+        url: 'jdbc:log4jdbc:mysql://27.115.67.203:20064/ms_finance?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true'
+        username: root
+        password: root
+        initialSize: 2
+        minIdle: 5
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 50
+        removeAbandoned: true
+        filters: stat
+      reader1:
+        driverClassName: 'net.sf.log4jdbc.sql.jdbcapi.DriverSpy'
+        url: 'jdbc:log4jdbc:mysql://27.115.67.203:20064/ms_finance?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true'
+        username: root
+        password: root
+        initialSize: 2
+        minIdle: 5
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 50
+        removeAbandoned: true
+        filters: stat
+
+external:
+  api:
+    flowTelecom:  http://localhost/MediaUnited
+    mediaUnited:  http://27.115.67.198:10001/MediaUnited

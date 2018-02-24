@@ -12,18 +12,18 @@ import java.util.List;
  * Created by zhangqf on 2017/6/9.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess"})
-public class GithubPagedUtil implements IPagedUtil {
+public class GitHubPagedUtil implements IPagedUtil {
     private boolean offsetAsPageNum = false;
 
     public void setOffsetAsPageNum(boolean offsetAsPageNum) {
         this.offsetAsPageNum = offsetAsPageNum;
     }
 
-    public GithubPagedUtil() {
+    public GitHubPagedUtil() {
         offsetAsPageNum = true;
     }
 
-    public GithubPagedUtil(boolean offsetAsPageNum) {
+    public GitHubPagedUtil(boolean offsetAsPageNum) {
         this.offsetAsPageNum = offsetAsPageNum;
     }
 

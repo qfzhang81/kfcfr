@@ -41,7 +41,7 @@ public class SystemInformation {
     public static String getProcessId() {
         // get name representing the running Java virtual machine.
         String name = ManagementFactory.getRuntimeMXBean().getName();
-        System.out.println(name);
+//        System.out.println(name);
         // get pid
         return name.split("@")[0];
     }

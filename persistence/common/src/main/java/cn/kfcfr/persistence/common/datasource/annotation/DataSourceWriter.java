@@ -1,4 +1,4 @@
-package cn.kfcfr.persistence.mybatis.datasource.annotation;
+package cn.kfcfr.persistence.common.datasource.annotation;
 
 import java.lang.annotation.*;
 

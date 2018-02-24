@@ -1,6 +1,6 @@
 package cn.kfcfr.ztestmodel;
 
-import cn.kfcfr.core.DefaultToStringStyle;
+import cn.kfcfr.core.style.DefaultToStringStyle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;

@@ -1,14 +1,10 @@
 package cn.kfcfr.ztestweb.web1;
 
-import cn.kfcfr.core.bean.BeanCopy;
-import cn.kfcfr.ztestdao.db1.converter.SysUserConverter;
-import cn.kfcfr.ztestdao.db1.entity.SysUserEntity;
+import cn.kfcfr.core.convert.BeanCopy;
 import cn.kfcfr.ztestmodel.db1.SysUser;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by zhangqf on 2017/6/23.

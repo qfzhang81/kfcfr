@@ -1,6 +1,6 @@
 package cn.kfcfr.ztestdao.db1.converter;
 
-import cn.kfcfr.core.bean.BeanConverter;
+import cn.kfcfr.core.convert.BeanConverter;
 import cn.kfcfr.ztestdao.db1.entity.SysUserEntity;
 import cn.kfcfr.ztestmodel.db1.SysUser;
 

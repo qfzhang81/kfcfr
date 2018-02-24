@@ -1,0 +1,72 @@
+server:
+  port: ${port:${PORT:8888}}
+spring:
+  application:
+    name: '${ms.name}-${spring.cloud.client.hostname}'
+  jmx:
+    default-domain: '${ms.name}-${spring.cloud.client.hostname}'
+#management:
+#  port: ${server.port}
+#  context-path: '/admin'
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://27.115.67.203:40046/eureka/, http://27.115.67.203:40047/eureka/'
+#    healthcheck:
+#      enabled: false
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+      cluster: prontera
+      instanceId: ${spring.cloud.client.ipAddress}:${server.port}:${random.value}
+      management:
+        port: ${management.port}
+        context-path: ${management.context-path}
+      health:
+        path: ${management.context-path}/health
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+
+jdbc:
+  datasource:
+    primary:
+      type: com.alibaba.druid.pool.DruidDataSource
+      writer:
+        driverClassName: 'com.mysql.jdbc.Driver'
+        url: 'jdbc:mysql://localhost:3306/demoprimary?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8'
+        username: primaryuser
+        password: 123456
+        initialSize: 2
+        minIdle: 5
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 50
+        removeAbandoned: true
+        filters: stat
+      reader1:
+        driverClassName: 'com.mysql.jdbc.Driver'
+        url: 'jdbc:mysql://localhost:3306/demoimage?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8'
+        username: imageuser
+        password: 123456
+        initialSize: 2
+        minIdle: 5
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 50
+        removeAbandoned: true
+        filters: stat
