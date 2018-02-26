@@ -1,7 +1,7 @@
 package cn.kfcfr.ztestcommon.config;
 
-import cn.kfcfr.persistence.common.datasource.DataSourceType;
-import cn.kfcfr.persistence.mybatis.datasource.DataSourceContextHolder;
+import cn.kfcfr.persistence.common.datasource.RwDataSourceContextHolder;
+import cn.kfcfr.persistence.common.datasource.RwDataSourceType;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -27,9 +27,9 @@ public class DataSourceAop implements PriorityOrdered {
             + " and @annotation(cn.kfcfr.persistence.common.datasource.annotation.DataSourceReader) ")
     public Object setReaderType(ProceedingJoinPoint joinPoint) throws Throwable {
         //如果已经开启写事务了，那之后的所有读都从写库读
-        if (!DataSourceType.reader.getType().equals(DataSourceContextHolder.get())) {
+        if (!RwDataSourceType.reader.getType().equals(RwDataSourceContextHolder.get())) {
             logger.info(MessageFormat.format("Need change datasource to reader for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
-            DataSourceContextHolder.setReader();
+            RwDataSourceContextHolder.setReader();
         }
         else {
             logger.info(MessageFormat.format("Already use datasource reader for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
@@ -37,22 +37,22 @@ public class DataSourceAop implements PriorityOrdered {
         try {
             return joinPoint.proceed();
         }
-//        catch (Throwable throwable) {
-//            logger.warn(MessageFormat.format("A throwable is catch when executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())), throwable);
-//            throw throwable;
-//        }
+        catch (Throwable throwable) {
+            logger.warn(MessageFormat.format("A throwable is catch when executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())), throwable);
+            throw throwable;
+        }
         finally {
             logger.info(MessageFormat.format("Change datasource to writer after executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
-            DataSourceContextHolder.setWriter();
+            RwDataSourceContextHolder.setWriter();
         }
     }
 
     @Before("execution(* cn.kfcfr.ztestcommon.serviceimpl..*.*(..)) "
             + " and @annotation(cn.kfcfr.persistence.common.datasource.annotation.DataSourceWriter) ")
     public void setWriterType(JoinPoint joinPoint) {
-        if (!DataSourceType.writer.getType().equals(DataSourceContextHolder.get())) {
+        if (!RwDataSourceType.writer.getType().equals(RwDataSourceContextHolder.get())) {
             logger.info(MessageFormat.format("Need change datasource to writer for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
-            DataSourceContextHolder.setWriter();
+            RwDataSourceContextHolder.setWriter();
         }
     }
 

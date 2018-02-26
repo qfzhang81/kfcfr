@@ -1,13 +1,9 @@
-package cn.kfcfr.persistence.mybatis.datasource;
+package cn.kfcfr.persistence.common.datasource;
 
-import cn.kfcfr.persistence.common.datasource.DataSourceType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
-public class DataSourceContextHolder {
-    protected final Log logger = LogFactory.getLog(this.getClass());
+public class RwDataSourceContextHolder {
 
     //线程本地环境
     private static final ThreadLocal<String> local = new ThreadLocal<>();
@@ -20,8 +16,7 @@ public class DataSourceContextHolder {
      * 读库
      */
     public static void setReader() {
-        local.set(DataSourceType.reader.getType());
-        //logger.info("Datasource changed to " + DataSourceType.reader.getType());
+        local.set(RwDataSourceType.reader.getType());
     }
 
     /**
@@ -29,15 +24,14 @@ public class DataSourceContextHolder {
      */
     public static void setReader(String sourceName) {
         if (StringUtils.isBlank(sourceName)) throw new IllegalArgumentException("sourceName cannot be empty.");
-        local.set(sourceName + "-" + DataSourceType.reader.getType());
+        local.set(sourceName + "-" + RwDataSourceType.reader.getType());
     }
 
     /**
      * 写库
      */
     public static void setWriter() {
-        local.set(DataSourceType.writer.getType());
-        //logger.info("Datasource changed to " + DataSourceType.writer.getType());
+        local.set(RwDataSourceType.writer.getType());
     }
 
     /**
@@ -45,7 +39,7 @@ public class DataSourceContextHolder {
      */
     public static void setWriter(String sourceName) {
         if (StringUtils.isBlank(sourceName)) throw new IllegalArgumentException("sourceName cannot be empty.");
-        local.set(sourceName + "-" + DataSourceType.writer.getType());
+        local.set(sourceName + "-" + RwDataSourceType.writer.getType());
     }
 
     public static String get() {
