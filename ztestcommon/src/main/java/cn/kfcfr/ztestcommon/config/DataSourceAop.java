@@ -37,10 +37,10 @@ public class DataSourceAop implements PriorityOrdered {
         try {
             return joinPoint.proceed();
         }
-        catch (Throwable throwable) {
-            logger.warn(MessageFormat.format("A throwable is catch when executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())), throwable);
-            throw throwable;
-        }
+//        catch (Throwable throwable) {
+//            logger.warn(MessageFormat.format("A throwable is catch when executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())), throwable);
+//            throw throwable;
+//        }
         finally {
             logger.info(MessageFormat.format("Change datasource to writer after executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
             RwDataSourceContextHolder.setWriter();
