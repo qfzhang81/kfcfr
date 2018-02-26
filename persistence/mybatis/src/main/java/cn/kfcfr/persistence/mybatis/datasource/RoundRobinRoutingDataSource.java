@@ -29,7 +29,7 @@ public class RoundRobinRoutingDataSource extends AbstractRoutingDataSource {
         if (typeKey.equals(DataSourceType.writer.getType())) {
             logger.info("Use " + rtnKey + " datasource in determineCurrentLookupKey().");
         }
-        else if (typeKey.equals("-" + DataSourceType.reader.getType())) {
+        else if (typeKey.equals(DataSourceType.reader.getType())) {
             //读库， 简单负载均衡
             int number = count.getAndAdd(1);
             int lookupKey = number % readerSize + 1;

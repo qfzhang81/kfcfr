@@ -59,6 +59,7 @@ public abstract class AbstractDataSourceConfiguration {
         RoundRobinRoutingDataSource dataSource = new RoundRobinRoutingDataSource();
         dataSource.setTargetDataSources(targetDataSources);// 该方法是AbstractRoutingDataSource的方法
         dataSource.setDefaultTargetDataSource(dataSourceWriter);// 默认的datasource设置为写库
+        dataSource.setReaderSize(dataSourceReaders.length);
         return dataSource;
     }
 }

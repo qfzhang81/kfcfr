@@ -54,7 +54,7 @@
               </RollingRandomAccessFile>
        </appenders>
        <loggers>
-              <root level="error">
+              <root level="debug">
                      <appender-ref ref="stdout"/>
                      <appender-ref ref="err"/>
 
