@@ -1,7 +1,5 @@
-package cn.kfcfr.persistence.mybatis.datasource;
+package cn.kfcfr.persistence.mybatis.datasource.rw;
 
-import cn.kfcfr.persistence.common.datasource.RwDataSourceContextHolder;
-import cn.kfcfr.persistence.common.datasource.RwDataSourceType;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import java.util.concurrent.atomic.AtomicInteger;

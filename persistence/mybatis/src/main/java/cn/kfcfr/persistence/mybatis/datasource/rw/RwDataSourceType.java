@@ -1,4 +1,4 @@
-package cn.kfcfr.persistence.common.datasource;
+package cn.kfcfr.persistence.mybatis.datasource.rw;
 
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
 public enum RwDataSourceType {

@@ -3,7 +3,7 @@ package cn.kfcfr.ztestcommon.serviceimpl;
 import cn.kfcfr.core.pagination.PagedBounds;
 import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pojo.PropertyCondition;
-import cn.kfcfr.persistence.common.datasource.annotation.DataSourceReader;
+import cn.kfcfr.persistence.mybatis.datasource.rw.annotation.DataSourceReader;
 import cn.kfcfr.persistence.mybatis.mapper.MapperUtil;
 import cn.kfcfr.ztestcommon.converter.SysUserConverter;
 import cn.kfcfr.ztestcommon.dao.db1.ISysUserDao;

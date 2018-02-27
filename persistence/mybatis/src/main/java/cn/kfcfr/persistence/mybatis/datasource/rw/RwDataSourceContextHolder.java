@@ -1,4 +1,4 @@
-package cn.kfcfr.persistence.common.datasource;
+package cn.kfcfr.persistence.mybatis.datasource.rw;
 
 import org.apache.commons.lang3.StringUtils;
 

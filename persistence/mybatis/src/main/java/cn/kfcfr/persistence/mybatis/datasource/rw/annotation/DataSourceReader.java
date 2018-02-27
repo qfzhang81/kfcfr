@@ -1,4 +1,4 @@
-package cn.kfcfr.persistence.common.datasource.annotation;
+package cn.kfcfr.persistence.mybatis.datasource.rw.annotation;
 
 import java.lang.annotation.*;
 
@@ -7,6 +7,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface DataSourceWriter {
+public @interface DataSourceReader {
     String value() default "";
 }

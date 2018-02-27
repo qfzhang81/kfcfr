@@ -1,7 +1,7 @@
 package cn.kfcfr.ztestcommon.config;
 
-import cn.kfcfr.persistence.common.datasource.RwDataSourceContextHolder;
-import cn.kfcfr.persistence.common.datasource.RwDataSourceType;
+import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceContextHolder;
+import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceType;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,7 +24,7 @@ public class DataSourceAop implements PriorityOrdered {
     protected static Logger logger = LoggerFactory.getLogger(DataSourceAop.class);
 
     @Around("execution(* cn.kfcfr.ztestcommon.serviceimpl..*.*(..)) "
-            + " and @annotation(cn.kfcfr.persistence.common.datasource.annotation.DataSourceReader) ")
+            + " and @annotation(cn.kfcfr.persistence.mybatis.datasource.rw.annotation.DataSourceReader) ")
     public Object setReaderType(ProceedingJoinPoint joinPoint) throws Throwable {
         //如果已经开启写事务了，那之后的所有读都从写库读
         if (!RwDataSourceType.reader.getType().equals(RwDataSourceContextHolder.get())) {
@@ -48,7 +48,7 @@ public class DataSourceAop implements PriorityOrdered {
     }
 
     @Before("execution(* cn.kfcfr.ztestcommon.serviceimpl..*.*(..)) "
-            + " and @annotation(cn.kfcfr.persistence.common.datasource.annotation.DataSourceWriter) ")
+            + " and @annotation(cn.kfcfr.persistence.mybatis.datasource.rw.annotation.DataSourceWriter) ")
     public void setWriterType(JoinPoint joinPoint) {
         if (!RwDataSourceType.writer.getType().equals(RwDataSourceContextHolder.get())) {
             logger.info(MessageFormat.format("Need change datasource to writer for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));

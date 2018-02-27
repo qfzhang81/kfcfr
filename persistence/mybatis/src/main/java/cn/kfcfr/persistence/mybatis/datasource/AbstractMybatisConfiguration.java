@@ -1,7 +1,7 @@
 package cn.kfcfr.persistence.mybatis.datasource;
 
-import cn.kfcfr.persistence.common.datasource.RwDataSourceContextHolder;
-import cn.kfcfr.persistence.common.datasource.RwDataSourceType;
+import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceContextHolder;
+import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceType;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;

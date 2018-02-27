@@ -1,6 +1,6 @@
 package cn.kfcfr.ztestcommon.config;
 
-import cn.kfcfr.persistence.mybatis.datasource.AbstractRwDataSourceConfiguration;
+import cn.kfcfr.persistence.mybatis.datasource.rw.AbstractRwDataSourceConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
