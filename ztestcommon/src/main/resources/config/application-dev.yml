@@ -70,7 +70,9 @@ jdbc:
         maxPoolPreparedStatementPerConnectionSize: 50
         removeAbandoned: true
         filters: stat
-      reader2:
+    second:
+      type: com.alibaba.druid.pool.DruidDataSource
+      writer:
         driverClassName: 'com.mysql.jdbc.Driver'
         url: 'jdbc:mysql://localhost:3306/demosecond?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8'
         username: seconduser

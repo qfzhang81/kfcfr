@@ -1,4 +1,4 @@
-package cn.kfcfr.ztestcommon.dao;
+package cn.kfcfr.ztestcommon.dao.db1;
 
 import cn.kfcfr.persistence.mybatis.mapper.CommonCrudMapper;
 import cn.kfcfr.persistence.mybatis.mapper.CommonReadonlyMapper;

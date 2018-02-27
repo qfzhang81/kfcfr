@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
 @Configuration
-@MapperScan(basePackages = "cn.kfcfr.ztestcommon.dao", sqlSessionFactoryRef = "primarySqlSessionFactory")
+@MapperScan(basePackages = "cn.kfcfr.ztestcommon.dao.db1", sqlSessionFactoryRef = "primarySqlSessionFactory")
 public class PrimaryDataSourceConfiguration extends AbstractRwDataSourceConfiguration {
     //加载全局的配置文件
     @Value("${mybatis.configLocation}")
@@ -64,7 +64,7 @@ public class PrimaryDataSourceConfiguration extends AbstractRwDataSourceConfigur
     @Primary
     public SqlSessionFactory sqlSessionFactory(@Qualifier("primaryDataSourceProxy") DataSource dataSource) throws Exception {
         logger.trace("------ Primary SqlSessionTemplate init ------");
-        return super.sqlSessionFactory(dataSource, "classpath:mappers/**/*.xml");
+        return super.sqlSessionFactory(dataSource, "classpath:mappers/db1/**/*.xml");
     }
 
     @Autowired

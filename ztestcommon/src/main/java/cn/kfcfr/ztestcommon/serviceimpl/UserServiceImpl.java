@@ -6,7 +6,9 @@ import cn.kfcfr.core.pojo.PropertyCondition;
 import cn.kfcfr.persistence.common.datasource.annotation.DataSourceReader;
 import cn.kfcfr.persistence.mybatis.mapper.MapperUtil;
 import cn.kfcfr.ztestcommon.converter.SysUserConverter;
-import cn.kfcfr.ztestcommon.dao.ISysUserDao;
+import cn.kfcfr.ztestcommon.dao.db1.ISysUserDao;
+import cn.kfcfr.ztestcommon.dao.db2.ISyncUserDao;
+import cn.kfcfr.ztestcommon.entity.SyncUserEntity;
 import cn.kfcfr.ztestcommon.entity.SysUserEntity;
 import cn.kfcfr.ztestcommon.service.IUserService;
 import cn.kfcfr.ztestmodel.db1.SysUser;
@@ -22,15 +24,26 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends BaseServiceImpl implements IUserService {
-    private final ISysUserDao sysUserDao;
+    private ISysUserDao sysUserDao;
+    private ISyncUserDao syncUserDao;
 
     @Qualifier("mapperUtil")
     protected MapperUtil mapperUtil;
     private final SysUserConverter converter = new SysUserConverter();
 
+//    @Autowired
+//    public UserServiceImpl(ISysUserDao sysUserDao) {
+//        this.sysUserDao = sysUserDao;
+//    }
+
     @Autowired
-    public UserServiceImpl(ISysUserDao sysUserDao) {
+    public void setSysUserDao(ISysUserDao sysUserDao) {
         this.sysUserDao = sysUserDao;
+    }
+
+    @Autowired
+    public void setSyncUserDao(ISyncUserDao syncUserDao) {
+        this.syncUserDao = syncUserDao;
     }
 
     @Autowired
@@ -62,6 +75,7 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @Override
     public SysUser getById(Long id) throws Exception {
         SysUserEntity entity = mapperUtil.getByKey(sysUserDao, id);
+        SyncUserEntity entity2 = mapperUtil.getByKey(syncUserDao, 100 + id);
         return converter.convertT2ToT1(entity);
     }
 
