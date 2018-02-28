@@ -12,8 +12,6 @@ import java.util.List;
  * Created by zhangqf77 on 2018/2/27.
  */
 public abstract class AbstractMybatisSelectRepository<T> extends AbstractMybatisRepository implements ISelectRepository<T> {
-
-
     protected abstract CommonReadonlyMapper<T> getMapper();
 
     @Override

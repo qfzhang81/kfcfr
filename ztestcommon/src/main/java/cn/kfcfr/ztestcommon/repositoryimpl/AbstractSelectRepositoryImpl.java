@@ -2,7 +2,7 @@ package cn.kfcfr.ztestcommon.repositoryimpl;
 
 import cn.kfcfr.persistence.mybatis.pagination.IPagedUtil;
 import cn.kfcfr.persistence.mybatis.pagination.PagedUtilFactory;
-import cn.kfcfr.persistence.mybatis.repository.AbstractMybatisSelectRepository;
+import cn.kfcfr.persistence.mybatis.repository.AbstractMybatisSelectWithConvertRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 /**
  * Created by zhangqf77 on 2018/2/27.
  */
-public abstract class AbstractSelectRepositoryImpl<T> extends AbstractMybatisSelectRepository<T> {
+public abstract class AbstractSelectRepositoryImpl<M, T> extends AbstractMybatisSelectWithConvertRepository<M, T> {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${pagehelper.offset-as-page-num}")
