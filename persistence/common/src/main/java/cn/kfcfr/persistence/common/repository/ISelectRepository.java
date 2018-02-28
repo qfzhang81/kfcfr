@@ -12,5 +12,7 @@ import java.util.List;
 public interface ISelectRepository<T> {
     T getByKey(Object key);
 
+    T selectOne(List<PropertyCondition> searchConditions);
+
     PagedList<T> getBySearch(PagedBounds pagedBounds, List<PropertyCondition> searchConditions);
 }

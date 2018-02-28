@@ -1,12 +1,13 @@
 package cn.kfcfr.persistence.mybatis.mapper;
 
-import cn.kfcfr.core.pojo.PropertyCondition;
 import cn.kfcfr.core.pagination.PagedBounds;
 import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pagination.SortCondition;
 import cn.kfcfr.core.pagination.SortDirection;
+import cn.kfcfr.core.pojo.PropertyCondition;
 import cn.kfcfr.persistence.mybatis.pagination.IPagedUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.mapper.common.RowBoundsMapper;
 import tk.mybatis.mapper.common.base.BaseDeleteMapper;
@@ -19,6 +20,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -107,8 +109,15 @@ public class MapperUtil implements Serializable {
         return dao.selectByPrimaryKey(key);
     }
 
-    public <T> T getOne(BaseSelectMapper<T> dao, T search) {
-        return dao.selectOne(search);
+    public <T> T getOne(SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
+        List<T> result = getList(dao, searchConditions);
+        if (result == null || result.size() == 0) {
+            return null;
+        }
+        else if (result.size() == 1) {
+            return result.get(0);
+        }
+        throw new TooManyResultsException(MessageFormat.format("Expected one result (or null) to be returned, but found: {0}", result.size()));
     }
 
     public <T> List<T> getList(BaseSelectMapper<T> dao, T search) {

@@ -12,5 +12,7 @@ import java.util.List;
 public interface ISelectWithConvertRepository<M, T> extends ISelectRepository<T> {
     M getWithConvertByKey(Object key) throws ReflectiveOperationException;
 
+    M selectOneWithConvert(List<PropertyCondition> searchConditions) throws ReflectiveOperationException;
+
     PagedList<M> getWithConvertBySearch(PagedBounds pagedBounds, List<PropertyCondition> searchConditions) throws ReflectiveOperationException;
 }
