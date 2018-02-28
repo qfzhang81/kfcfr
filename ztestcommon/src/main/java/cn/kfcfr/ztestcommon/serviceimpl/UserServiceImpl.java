@@ -10,6 +10,7 @@ import cn.kfcfr.ztestcommon.dao.db1.ISysUserDao;
 import cn.kfcfr.ztestcommon.dao.db2.ISyncUserDao;
 import cn.kfcfr.ztestcommon.entity.SyncUserEntity;
 import cn.kfcfr.ztestcommon.entity.SysUserEntity;
+import cn.kfcfr.ztestcommon.repository.db1.ISysUserRepository;
 import cn.kfcfr.ztestcommon.service.IUserService;
 import cn.kfcfr.ztestmodel.db1.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     protected MapperUtil mapperUtil;
     private final SysUserConverter converter = new SysUserConverter();
 
+    private ISysUserRepository sysUserRepository;
+
 //    @Autowired
 //    public UserServiceImpl(ISysUserDao sysUserDao) {
 //        this.sysUserDao = sysUserDao;
@@ -49,6 +52,11 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @Autowired
     public void setMapperUtil(MapperUtil mapperUtil) {
         this.mapperUtil = mapperUtil;
+    }
+
+    @Autowired
+    public void setSysUserRepository(ISysUserRepository sysUserRepository) {
+        this.sysUserRepository = sysUserRepository;
     }
 
     @Override
@@ -74,7 +82,8 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @DataSourceReader
     @Override
     public SysUser getById(Long id) throws Exception {
-        SysUserEntity entity = mapperUtil.getByKey(sysUserDao, id);
+        //SysUserEntity entity = mapperUtil.getByKey(sysUserDao, id);
+        SysUserEntity entity = sysUserRepository.getByKey(id);
         SyncUserEntity entity2 = mapperUtil.getByKey(syncUserDao, 100 + id);
         return converter.convertT2ToT1(entity);
     }

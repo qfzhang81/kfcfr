@@ -8,7 +8,8 @@ import tk.mybatis.mapper.common.ids.DeleteByIdsMapper;
 /**
  * Created by zhangqf on 2017/6/9.
  */
-public interface CommonCrudMapper<T> extends BaseMapper<T>
+public interface CommonCrudMapper<T> extends CommonReadonlyMapper<T>
+        , BaseMapper<T>
         , ExampleMapper<T>
         , DeleteByIdsMapper<T>
         , IdsMapper<T> {

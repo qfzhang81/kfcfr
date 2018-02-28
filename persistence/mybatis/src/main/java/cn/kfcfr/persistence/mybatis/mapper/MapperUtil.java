@@ -39,13 +39,15 @@ public class MapperUtil implements Serializable {
         this.mapConverter = mapConverter;
     }
 
-    public MapperUtil() {}
+    public MapperUtil() {
+    }
+
     public MapperUtil(IPagedUtil pagedUtil, EntityColumnMapConverter mapConverter) {
         this.pagedUtil = pagedUtil;
         this.mapConverter = mapConverter;
     }
 
-    public <T> int add(BaseInsertMapper<T> dao , T entity, boolean ignoreNullField) {
+    public <T> int add(BaseInsertMapper<T> dao, T entity, boolean ignoreNullField) {
         int affected;
         if (ignoreNullField) {
             affected = dao.insertSelective(entity);
@@ -56,9 +58,24 @@ public class MapperUtil implements Serializable {
         return affected;
     }
 
-    public <T> int update(BaseUpdateMapper<T> dao , T entity, boolean ignoreNullField) {
+    public <T> int add(BaseInsertMapper<T> dao, List<T> entities, boolean ignoreNullField) {
+        int affected = 0;
+        if (ignoreNullField) {
+            for (T entity : entities) {
+                affected = affected + dao.insertSelective(entity);
+            }
+        }
+        else {
+            for (T entity : entities) {
+                affected = affected + dao.insert(entity);
+            }
+        }
+        return affected;
+    }
+
+    public <T> int update(BaseUpdateMapper<T> dao, T entity, boolean ignoreNullField) {
         int affected;
-        if(ignoreNullField) {
+        if (ignoreNullField) {
             affected = dao.updateByPrimaryKeySelective(entity);
         }
         else {
@@ -67,11 +84,26 @@ public class MapperUtil implements Serializable {
         return affected;
     }
 
-    public <T> int deleteByKey(BaseDeleteMapper<T> dao , Object key) {
+    public <T> int update(BaseUpdateMapper<T> dao, List<T> entities, boolean ignoreNullField) {
+        int affected = 0;
+        if (ignoreNullField) {
+            for (T entity : entities) {
+                affected = affected + dao.updateByPrimaryKeySelective(entity);
+            }
+        }
+        else {
+            for (T entity : entities) {
+                affected = affected + dao.updateByPrimaryKey(entity);
+            }
+        }
+        return affected;
+    }
+
+    public <T> int deleteByKey(BaseDeleteMapper<T> dao, Object key) {
         return dao.deleteByPrimaryKey(key);
     }
 
-    public <T> T getByKey(BaseSelectMapper<T> dao , Object key) {
+    public <T> T getByKey(BaseSelectMapper<T> dao, Object key) {
         return dao.selectByPrimaryKey(key);
     }
 
@@ -174,25 +206,25 @@ public class MapperUtil implements Serializable {
     }
 
     protected void initExampleOrderBy(Example example, PagedBounds pagedBounds, boolean logicName2ColumnName) {
-        if(pagedBounds == null || example == null) return;
+        if (pagedBounds == null || example == null) return;
         Example.OrderBy orderBy = null;
         boolean isFirst = true;
-        for(SortCondition sortField : pagedBounds.getSortBy()) {
-            if(sortField == null || StringUtils.isEmpty(sortField.getSortLogicName())) {
+        for (SortCondition sortField : pagedBounds.getSortBy()) {
+            if (sortField == null || StringUtils.isEmpty(sortField.getSortLogicName())) {
                 continue;
             }
             String columnName = sortField.getSortLogicName();
             if (logicName2ColumnName) {
                 columnName = mapConverter.getEntityColumnName(example.getEntityClass(), sortField.getSortLogicName());
             }
-            if(isFirst) {
+            if (isFirst) {
                 orderBy = example.orderBy(columnName);
                 isFirst = false;
             }
             else {
                 orderBy = orderBy.orderBy(columnName);
             }
-            if(sortField.getSortDirection()== SortDirection.DESC) {
+            if (sortField.getSortDirection() == SortDirection.DESC) {
                 orderBy = orderBy.desc();
             }
             else {
