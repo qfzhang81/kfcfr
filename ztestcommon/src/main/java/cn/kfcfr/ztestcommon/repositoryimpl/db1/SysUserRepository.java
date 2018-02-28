@@ -22,8 +22,9 @@ public class SysUserRepository extends AbstractCrudRepositoryImpl<SysUserEntity>
         this.sysUserDao = sysUserDao;
     }
 
+
     @Override
-    protected CommonCrudMapper<SysUserEntity> getCrudMapper() {
+    protected CommonCrudMapper<SysUserEntity> getMapper() {
         return sysUserDao;
     }
 }

@@ -1,11 +1,13 @@
 package cn.kfcfr.ztestcommon.repositoryimpl;
 
 import cn.kfcfr.persistence.mybatis.pagination.IPagedUtil;
-import cn.kfcfr.persistence.mybatis.pagination.github_pagehelper.GitHubPagedUtil;
+import cn.kfcfr.persistence.mybatis.pagination.PagedUtilFactory;
 import cn.kfcfr.persistence.mybatis.repository.AbstractMybatisCrudRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.text.MessageFormat;
 
 /**
  * Created by zhangqf77 on 2018/2/27.
@@ -17,7 +19,8 @@ public abstract class AbstractCrudRepositoryImpl<T> extends AbstractMybatisCrudR
     private Boolean pageHelperOffsetAsPageNum;
 
     @Override
-    protected IPagedUtil getPagedUtil() {
-        return new GitHubPagedUtil(pageHelperOffsetAsPageNum);
+    protected IPagedUtil createPagedUtil() {
+        logger.info(MessageFormat.format("Create GitHubPagedUtil with pageHelperOffsetAsPageNum={0}", pageHelperOffsetAsPageNum));
+        return PagedUtilFactory.createGitHubPagedUtil(pageHelperOffsetAsPageNum);
     }
 }
