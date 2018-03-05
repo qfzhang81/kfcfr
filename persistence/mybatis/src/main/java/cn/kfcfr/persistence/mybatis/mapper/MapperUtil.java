@@ -105,12 +105,12 @@ public class MapperUtil implements Serializable {
         return dao.deleteByPrimaryKey(key);
     }
 
-    public <T> T getByKey(BaseSelectMapper<T> dao, Object key) {
+    public <T> T selectByKey(BaseSelectMapper<T> dao, Object key) {
         return dao.selectByPrimaryKey(key);
     }
 
-    public <T> T getOne(SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
-        List<T> result = getList(dao, searchConditions);
+    public <T> T selectOne(SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
+        List<T> result = selectList(dao, searchConditions);
         if (result == null || result.size() == 0) {
             return null;
         }
@@ -120,23 +120,23 @@ public class MapperUtil implements Serializable {
         throw new TooManyResultsException(MessageFormat.format("Expected one result (or null) to be returned, but found: {0}", result.size()));
     }
 
-    public <T> List<T> getList(BaseSelectMapper<T> dao, T search) {
+    public <T> List<T> selectList(BaseSelectMapper<T> dao, T search) {
         return dao.select(search);
     }
 
-    public <T> List<T> getList(SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
+    public <T> List<T> selectList(SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
         Example search = new Example(getEntityClass(dao));
         initExampleCriteria(search, searchConditions);
         return dao.selectByExample(search);
     }
 
-    public <T> List<T> getList(Class<T> clazz, SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
-        Example search = new Example(clazz);
-        initExampleCriteria(search, searchConditions);
-        return dao.selectByExample(search);
-    }
+//    public <T> List<T> getList(Class<T> clazz, SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
+//        Example search = new Example(clazz);
+//        initExampleCriteria(search, searchConditions);
+//        return dao.selectByExample(search);
+//    }
 
-    public <T> PagedList<T> getPagedList(RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
+    public <T> PagedList<T> selectPagedList(RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
         Example search = new Example(getEntityClass(dao));
         initExampleCriteria(search, searchConditions);
         initExampleOrderBy(search, pagedBounds, false);
@@ -145,14 +145,14 @@ public class MapperUtil implements Serializable {
         return pagedUtil.convertToPagedList(list, pagedBounds);
     }
 
-    public <T> PagedList<T> getPagedList(Class<T> clazz, RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
-        Example search = new Example(clazz);
-        initExampleCriteria(search, searchConditions);
-        initExampleOrderBy(search, pagedBounds, false);
-        RowBounds rowBounds = pagedUtil.convertToRowBounds(pagedBounds);
-        List<T> list = dao.selectByExampleAndRowBounds(search, rowBounds);
-        return pagedUtil.convertToPagedList(list, pagedBounds);
-    }
+//    public <T> PagedList<T> getPagedList(Class<T> clazz, RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
+//        Example search = new Example(clazz);
+//        initExampleCriteria(search, searchConditions);
+//        initExampleOrderBy(search, pagedBounds, false);
+//        RowBounds rowBounds = pagedUtil.convertToRowBounds(pagedBounds);
+//        List<T> list = dao.selectByExampleAndRowBounds(search, rowBounds);
+//        return pagedUtil.convertToPagedList(list, pagedBounds);
+//    }
 
     protected void initExampleCriteria(Example example, List<PropertyCondition> searchConditions) {
         if (searchConditions == null || example == null) return;

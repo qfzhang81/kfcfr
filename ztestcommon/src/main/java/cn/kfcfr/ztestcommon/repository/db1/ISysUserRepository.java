@@ -9,4 +9,5 @@ import cn.kfcfr.ztestmodel.db1.SysUser;
  * Created by zhangqf77 on 2018/2/27.
  */
 public interface ISysUserRepository extends ICrudWithConvertRepository<SysUser, SysUserEntity>, ISelectWithConvertRepository<SysUser, SysUserEntity> {
+    SysUser selectByAccount(String account) throws ReflectiveOperationException;
 }

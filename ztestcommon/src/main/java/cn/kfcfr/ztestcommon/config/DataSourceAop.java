@@ -1,6 +1,6 @@
 package cn.kfcfr.ztestcommon.config;
 
-import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceContextHolder;
+import cn.kfcfr.persistence.mybatis.datasource.rw.AbstractRwDataSourceAop;
 import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceType;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,7 +10,6 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
@@ -20,16 +19,27 @@ import java.util.Arrays;
 @Aspect
 @EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
 @Component
-public class DataSourceAop implements PriorityOrdered {
+public class DataSourceAop extends AbstractRwDataSourceAop {
     protected static Logger logger = LoggerFactory.getLogger(DataSourceAop.class);
+//    protected static RwDataSourceContextHolder contextHolder = new RwDataSourceContextHolder();
+
+//    @Override
+//    protected String getContextHolderType() {
+//        return RwDataSourceContextHolder.get();
+//    }
+//
+//    @Override
+//    protected void setContextHolderType(String type) {
+//        RwDataSourceContextHolder.set(type);
+//    }
 
     @Around("execution(* cn.kfcfr.ztestcommon.serviceimpl..*.*(..)) "
             + " and @annotation(cn.kfcfr.persistence.mybatis.datasource.rw.annotation.DataSourceReader) ")
     public Object setReaderType(ProceedingJoinPoint joinPoint) throws Throwable {
         //如果已经开启写事务了，那之后的所有读都从写库读
-        if (!RwDataSourceType.reader.getType().equals(RwDataSourceContextHolder.get())) {
-            logger.info(MessageFormat.format("Need change datasource to reader for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
-            RwDataSourceContextHolder.setReader();
+        boolean isChanged = changeDataSourceType(RwDataSourceType.reader.getType());
+        if (isChanged) {
+            logger.info(MessageFormat.format("Changed datasource to reader for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
         }
         else {
             logger.info(MessageFormat.format("Already use datasource reader for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
@@ -37,22 +47,20 @@ public class DataSourceAop implements PriorityOrdered {
         try {
             return joinPoint.proceed();
         }
-//        catch (Throwable throwable) {
-//            logger.warn(MessageFormat.format("A throwable is catch when executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())), throwable);
-//            throw throwable;
-//        }
         finally {
-            logger.info(MessageFormat.format("Change datasource to writer after executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
-            RwDataSourceContextHolder.setWriter();
+            if (isChanged) {
+                changeDataSourceType(RwDataSourceType.writer.getType());
+                logger.info(MessageFormat.format("Changed datasource to writer after executing {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
+            }
         }
     }
 
     @Before("execution(* cn.kfcfr.ztestcommon.serviceimpl..*.*(..)) "
             + " and @annotation(cn.kfcfr.persistence.mybatis.datasource.rw.annotation.DataSourceWriter) ")
     public void setWriterType(JoinPoint joinPoint) {
-        if (!RwDataSourceType.writer.getType().equals(RwDataSourceContextHolder.get())) {
-            logger.info(MessageFormat.format("Need change datasource to writer for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
-            RwDataSourceContextHolder.setWriter();
+        boolean isChanged = changeDataSourceType(RwDataSourceType.writer.getType());
+        if (isChanged) {
+            logger.info(MessageFormat.format("Changed datasource to writer for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
         }
     }
 
@@ -95,13 +103,4 @@ public class DataSourceAop implements PriorityOrdered {
 //            logger.info(MessageFormat.format("Already use datasource writer for {0}.{1} (ARGS: {2})", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs())));
 //        }
 //    }
-
-    /***
-     * 值越小，越优先执行
-     * 要优于事务的执行
-     */
-    @Override
-    public int getOrder() {
-        return 10;
-    }
 }
