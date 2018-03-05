@@ -1,5 +1,6 @@
 package cn.kfcfr.persistence.mybatis.datasource.rw;
 
+import cn.kfcfr.persistence.mybatis.datasource.DataSourceContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.PriorityOrdered;
 
@@ -7,16 +8,12 @@ import org.springframework.core.PriorityOrdered;
  * Created by zhangqf77 on 2018/3/1.
  */
 public abstract class AbstractRwDataSourceAop implements PriorityOrdered {
-//    protected RwDataSourceContextHolder contextHolder;
-
-//    protected abstract RwDataSourceContextHolder getContextHolder();
-
     protected String getContextHolderType() {
-        return RwDataSourceContextHolder.get();
+        return DataSourceContextHolder.get();
     }
 
     protected void setContextHolderType(String type) {
-        RwDataSourceContextHolder.set(type);
+        DataSourceContextHolder.set(type);
     }
 
     /***
@@ -28,33 +25,24 @@ public abstract class AbstractRwDataSourceAop implements PriorityOrdered {
         return 10;
     }
 
-    public boolean changeDataSourceType(String type) {
+    public boolean changeToReader() {
+        return changeDataSourceType(RwDataSourceType.reader.isWritable());
+    }
+
+    public boolean changeToWriter() {
+        return changeDataSourceType(RwDataSourceType.writer.isWritable());
+    }
+
+    public boolean changeDataSourceType(boolean isWritable) {
         String currentType = getContextHolderType();
-        if (!StringUtils.isEmpty(currentType) && currentType.equals(type)) {
-            //无需切换
-            return false;
+        if (!StringUtils.isEmpty(currentType)) {
+            boolean currentIsWritable = Boolean.parseBoolean(currentType);
+            if(currentIsWritable==isWritable) {
+                //无需切换
+                return false;
+            }
         }
-        setContextHolderType(type);
-//        for (RwDataSourceType e : RwDataSourceType.values()) {
-//            if (e.getType().equals(type)) {
-//                if (e.isWritable()) {
-//                    if (StringUtils.isBlank(sourceName)) {
-//                        setContextHolderType(e.getType());
-//                    }
-//                    else {
-//                        getContextHolder().setWriter(sourceName);
-//                    }
-//                }
-//                else {
-//                    if (StringUtils.isBlank(sourceName)) {
-//                        getContextHolder().setReader();
-//                    }
-//                    else {
-//                        getContextHolder().setReader(sourceName);
-//                    }
-//                }
-//            }
-//        }
+        setContextHolderType(String.valueOf(isWritable));
         return true;
     }
 }

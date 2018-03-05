@@ -1,6 +1,5 @@
 package cn.kfcfr.persistence.mybatis.datasource;
 
-import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceContextHolder;
 import cn.kfcfr.persistence.mybatis.datasource.rw.RwDataSourceType;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -104,16 +103,13 @@ public abstract class AbstractMybatisConfiguration {
              */
             @Override
             protected Object determineCurrentLookupKey() {
-                String typeKey = RwDataSourceContextHolder.get();
+                String typeKey = DataSourceContextHolder.get();
                 if (typeKey == null) {
                     logger.error("Cannot get typeKey from DataSourceContextHolder.get() in determineCurrentLookupKey().");
                     throw new NullPointerException("TypeKey cannot be null.");
                 }
                 String rtnKey = typeKey;
-                if (typeKey.endsWith("-" + RwDataSourceType.writer.getType())) {
-                    logger.info("Use " + rtnKey + " datasource in determineCurrentLookupKey().");
-                }
-                else if (typeKey.endsWith("-" + RwDataSourceType.reader.getType())) {
+                if (typeKey.equals(RwDataSourceType.reader.getType())) {
                     //读库， 简单负载均衡
                     int lookupKey = 1;
                     Integer size = readerSize;
@@ -124,6 +120,10 @@ public abstract class AbstractMybatisConfiguration {
                     }
                     rtnKey = typeKey + "-" + lookupKey;
                     logger.info("Use datasource reader" + lookupKey + " in determineCurrentLookupKey().");
+                }
+                else {
+                    //写库
+                    logger.info("Use " + rtnKey + " datasource in determineCurrentLookupKey().");
                 }
                 return rtnKey;
             }

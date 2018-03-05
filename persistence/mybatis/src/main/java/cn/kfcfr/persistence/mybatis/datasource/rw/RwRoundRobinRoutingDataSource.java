@@ -1,5 +1,6 @@
 package cn.kfcfr.persistence.mybatis.datasource.rw;
 
+import cn.kfcfr.persistence.mybatis.datasource.DataSourceContextHolder;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
 public class RwRoundRobinRoutingDataSource extends AbstractRoutingDataSource {
     protected int readerSize;
+    protected String WriterPrefix = "writer";
+    protected String ReaderPrefix = "reader-";
     private AtomicInteger count = new AtomicInteger(0);
 
     public int getReaderSize() {
@@ -19,23 +22,20 @@ public class RwRoundRobinRoutingDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        String typeKey = RwDataSourceContextHolder.get();
+        String typeKey = DataSourceContextHolder.get();
         if (typeKey == null) {
             logger.error("Cannot get typeKey from DataSourceContextHolder.get() in determineCurrentLookupKey().");
             throw new NullPointerException("TypeKey cannot be null.");
         }
-        String rtnKey = typeKey;
-        if (typeKey.equals(RwDataSourceType.writer.getType())) {
-            logger.info("Use " + rtnKey + " datasource in determineCurrentLookupKey().");
-        }
-        else if (typeKey.equals(RwDataSourceType.reader.getType())) {
+        String rtnKey = WriterPrefix;
+        if (!Boolean.parseBoolean(typeKey)) {
             //读库， 轮询方式负载均衡
             int number = count.getAndAdd(1);
             int lookupKey = number % readerSize + 1;
             if (lookupKey > readerSize) lookupKey = readerSize;
-            rtnKey = typeKey + "-" + lookupKey;
-            logger.info("Use datasource reader" + lookupKey + " in determineCurrentLookupKey().");
+            rtnKey = ReaderPrefix + lookupKey;
         }
+        logger.info("Use datasource " + rtnKey + " in determineCurrentLookupKey().");
         return rtnKey;
     }
 }
