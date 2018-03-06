@@ -1,6 +1,7 @@
 package cn.kfcfr.ztestcommon.serviceimpl;
 
 import cn.kfcfr.core.convert.BeanCopy;
+import cn.kfcfr.core.convert.JsonConvert;
 import cn.kfcfr.core.pagination.PagedBounds;
 import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pojo.PersistenceAffectedCount;
@@ -73,19 +74,25 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @Override
     public SysUser selectById(Long id) throws Exception {
         SysUser syncUser = syncUserRepository.selectWithConvertByKey(100 + id);
+        System.out.println(JsonConvert.toJsonString(syncUser));
         SyncUserEntity syncUserEntity = syncUserRepository.selectByKey(100 + id);
+        System.out.println(JsonConvert.toJsonString(syncUserEntity));
         return sysUserRepository.selectWithConvertByKey(id);
     }
 
     @DataSourceReader
     @Override
     public SysUser selectByAccount(String account) throws Exception {
+        SysUser syncUser = syncUserRepository.selectByAccount(account);
+        System.out.println(JsonConvert.toJsonString(syncUser));
         return sysUserRepository.selectByAccount(account);
     }
 
     @DataSourceReader
     @Override
     public PagedList<SysUser> selectBySearch(PagedBounds pagedBounds, List<PropertyCondition> searchConditions) throws Exception {
+        PagedList<SysUser> list = syncUserRepository.selectPagedListWithConvert(pagedBounds, searchConditions);
+        System.out.println(JsonConvert.toJsonString(list));
         return sysUserRepository.selectPagedListWithConvert(pagedBounds, searchConditions);
     }
 }

@@ -56,7 +56,7 @@ public class PrimaryDataSourceConfiguration extends AbstractRwDataSourceConfigur
     @Primary
     public DataSourceTransactionManager transactionManager(@Qualifier("primaryDataSourceProxy") DataSource dataSource) {
         logger.trace("------ Primary TransactionManager init ------");
-        return new DataSourceTransactionManager(dataSource);
+        return createDataSourceTransactionManager(dataSource);
     }
 
     @Autowired
@@ -64,7 +64,7 @@ public class PrimaryDataSourceConfiguration extends AbstractRwDataSourceConfigur
     @Primary
     public SqlSessionFactory sqlSessionFactory(@Qualifier("primaryDataSourceProxy") DataSource dataSource) throws Exception {
         logger.trace("------ Primary SqlSessionTemplate init ------");
-        return super.sqlSessionFactory(dataSource, "classpath:mappers/db1/**/*.xml");
+        return createSqlSessionFactory(dataSource, "classpath:mappers/db1/**/*.xml");
     }
 
     @Autowired
@@ -72,7 +72,7 @@ public class PrimaryDataSourceConfiguration extends AbstractRwDataSourceConfigur
     protected AbstractRoutingDataSource roundRobinDataSourceProxy(@Qualifier("dataSourcePrimaryWriter") DataSource writer
             , @Qualifier("dataSourcePrimaryReader1") DataSource reader1
             , @Qualifier("dataSourcePrimaryReader2") DataSource reader2) {
-        return super.initDataSource(writer, reader1, reader2);
+        return initDataSource(writer, reader1, reader2);
     }
 
 }

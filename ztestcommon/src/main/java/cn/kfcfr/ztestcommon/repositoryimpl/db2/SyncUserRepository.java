@@ -1,6 +1,8 @@
 package cn.kfcfr.ztestcommon.repositoryimpl.db2;
 
+import cn.kfcfr.core.constant.Operator;
 import cn.kfcfr.core.convert.BeanConverter;
+import cn.kfcfr.core.pojo.PropertyCondition;
 import cn.kfcfr.persistence.mybatis.mapper.TkCrudMapper;
 import cn.kfcfr.persistence.mybatis.mapper.TkReadonlyMapper;
 import cn.kfcfr.ztestcommon.converter.SyncUserConverter;
@@ -11,6 +13,9 @@ import cn.kfcfr.ztestcommon.repositoryimpl.AbstractMybatisRepositoryImpl;
 import cn.kfcfr.ztestmodel.db1.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhangqf77 on 2018/2/27.
@@ -26,17 +31,29 @@ public class SyncUserRepository extends AbstractMybatisRepositoryImpl<SysUser, S
     }
 
     @Override
-    protected TkCrudMapper getCrudMapper() {
+    protected TkCrudMapper<SyncUserEntity> getCrudMapper() {
         return syncUserDao;
     }
 
     @Override
-    protected TkReadonlyMapper getReadonlyMapper() {
+    protected TkReadonlyMapper<SyncUserEntity> getReadonlyMapper() {
         return syncUserDao;
     }
 
     @Override
-    protected BeanConverter getConverter() {
+    protected BeanConverter<SysUser, SyncUserEntity> getConverter() {
         return converter;
+    }
+
+    @Override
+    public SysUser selectByAccount(String account) throws ReflectiveOperationException {
+        List<PropertyCondition> searchConditions = new ArrayList<>();
+        PropertyCondition p = new PropertyCondition();
+        p.setLogicName("userAccount");
+        p.setCompareOperator(Operator.Equal);
+        p.setCompareValue(account);
+        searchConditions.add(p);
+        SyncUserEntity entity = getMapperUtil().selectOne(getReadonlyMapper(), searchConditions);
+        return getConverter().convertT2ToT1(entity);
     }
 }
