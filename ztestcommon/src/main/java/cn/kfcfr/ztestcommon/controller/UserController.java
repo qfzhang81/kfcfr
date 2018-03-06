@@ -93,7 +93,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ResponseEntity<IResponseTransfer> find(@RequestBody SearchRequestTransfer transfer) {
+    public ResponseEntity<IResponseTransfer> find(@RequestBody(required = false) SearchRequestTransfer transfer) {
         HttpStatus httpStatus;
         List<PropertyCondition> searchConditions = null;
         PagedBounds pagedBounds = null;
@@ -102,7 +102,7 @@ public class UserController {
             pagedBounds = transfer.getPagedBounds();
         }
         if (pagedBounds == null) pagedBounds = new PagedBounds(1, 10);
-        if (pagedBounds.getSortBy().size() == 0) pagedBounds.addSort(new SortCondition("id", SortDirection.DESC));
+        if (pagedBounds.getSortBy().size() == 0) pagedBounds.addSort(new SortCondition("userId", SortDirection.DESC));
         IResponseTransfer res;
         try {
             PagedList<SysUser> rst = userService.selectBySearch(pagedBounds, searchConditions);

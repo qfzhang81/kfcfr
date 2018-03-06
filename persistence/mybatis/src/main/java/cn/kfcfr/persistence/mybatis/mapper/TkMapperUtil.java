@@ -203,8 +203,12 @@ public class TkMapperUtil implements Serializable {
                 continue;
             }
             String columnName = sortField.getSortLogicName();
+            String dbColumnName = mapConverter.getEntityColumnName(example.getEntityClass(), sortField.getSortLogicName());
+            if (StringUtils.isBlank(dbColumnName)) {
+                throw new IllegalArgumentException(MessageFormat.format("Cannot find db column by name {0} in class {1}", columnName, example.getEntityClass().getSimpleName()));
+            }
             if (logicName2ColumnName) {
-                columnName = mapConverter.getEntityColumnName(example.getEntityClass(), sortField.getSortLogicName());
+                columnName = dbColumnName;
             }
             if (isFirst) {
                 orderBy = example.orderBy(columnName);

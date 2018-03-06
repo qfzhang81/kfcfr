@@ -1,5 +1,6 @@
 package cn.kfcfr.ztestcommon.serviceimpl;
 
+import cn.kfcfr.core.convert.BeanCopy;
 import cn.kfcfr.core.pagination.PagedBounds;
 import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pojo.PersistenceAffectedCount;
@@ -40,6 +41,10 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @Override
     public PersistenceAffectedCount add(SysUser info, boolean ignoreNullField) throws Exception {
         int affected = sysUserRepository.addWithConvert(info, ignoreNullField);
+        SysUser syncUser = BeanCopy.deepClone(info);
+        syncUser.setUserId(100 + syncUser.getUserId());
+        syncUser.setUserName(syncUser.getUserName() + "-sync");
+        syncUserRepository.addWithConvert(syncUser, ignoreNullField);
         return new PersistenceAffectedCount(affected, 0, 0, 0, 0);
     }
 
@@ -48,6 +53,10 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @Override
     public PersistenceAffectedCount update(SysUser info, boolean ignoreNullField) throws Exception {
         int affected = sysUserRepository.updateWithConvert(info, ignoreNullField);
+        SysUser syncUser = BeanCopy.deepClone(info);
+        syncUser.setUserId(100 + syncUser.getUserId());
+        syncUser.setUserName(syncUser.getUserName() + "-sync");
+        syncUserRepository.updateWithConvert(syncUser, ignoreNullField);
         return new PersistenceAffectedCount(0, affected, 0, 0, 0);
     }
 
@@ -56,6 +65,7 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     @Override
     public PersistenceAffectedCount deleteByKey(Long key) throws Exception {
         int affected = sysUserRepository.deleteByKey(key);
+        syncUserRepository.deleteByKey(100 + key);
         return new PersistenceAffectedCount(0, 0, affected, 0, 0);
     }
 
