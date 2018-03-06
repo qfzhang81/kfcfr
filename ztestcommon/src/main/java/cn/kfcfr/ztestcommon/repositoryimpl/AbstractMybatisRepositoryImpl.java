@@ -1,7 +1,7 @@
 package cn.kfcfr.ztestcommon.repositoryimpl;
 
-import cn.kfcfr.persistence.mybatis.mapper.CommonCrudMapper;
-import cn.kfcfr.persistence.mybatis.mapper.CommonReadonlyMapper;
+import cn.kfcfr.persistence.mybatis.mapper.TkCrudMapper;
+import cn.kfcfr.persistence.mybatis.mapper.TkReadonlyMapper;
 import cn.kfcfr.persistence.mybatis.pagination.IPagedUtil;
 import cn.kfcfr.persistence.mybatis.pagination.PagedUtilFactory;
 import cn.kfcfr.persistence.mybatis.repository.AbstractMybatisRepository;
@@ -27,12 +27,12 @@ public abstract class AbstractMybatisRepositoryImpl<M, T> extends AbstractMybati
     }
 
     @Override
-    protected CommonCrudMapper<T> getCrudMapper() {
+    protected TkCrudMapper<T> getCrudMapper() {
         return null;
     }
 
     @Override
-    protected CommonReadonlyMapper<T> getReadonlyMapper() {
+    protected TkReadonlyMapper<T> getReadonlyMapper() {
         return null;
     }
 }

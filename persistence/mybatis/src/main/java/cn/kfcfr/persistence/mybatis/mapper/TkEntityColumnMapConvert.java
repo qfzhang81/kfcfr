@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by zhangqf on 2017/6/9.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess"})
-public class EntityColumnMapConverter {
+class TkEntityColumnMapConvert {
     private static final Map<Class<?>, Map<String, EntityColumn>> entityColumnMap = new HashMap<>();
 
     /***

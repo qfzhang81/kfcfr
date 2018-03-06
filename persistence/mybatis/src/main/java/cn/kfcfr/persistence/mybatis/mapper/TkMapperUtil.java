@@ -15,7 +15,6 @@ import tk.mybatis.mapper.common.base.BaseInsertMapper;
 import tk.mybatis.mapper.common.base.BaseSelectMapper;
 import tk.mybatis.mapper.common.base.BaseUpdateMapper;
 import tk.mybatis.mapper.common.example.SelectByExampleMapper;
-import tk.mybatis.mapper.entity.EntityColumn;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
@@ -28,25 +27,21 @@ import java.util.List;
  * Created by zhangqf on 2017/6/27.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess"})
-public class MapperUtil implements Serializable {
+public class TkMapperUtil implements Serializable {
     private static final long serialVersionUID = -9022124094847750630L;
     private IPagedUtil pagedUtil;
-    private EntityColumnMapConverter mapConverter;
+    private TkEntityColumnMapConvert mapConverter = new TkEntityColumnMapConvert();
 
-    public void setPagedUtil(IPagedUtil pagedUtil) {
+    public IPagedUtil getPagedUtil() {
+        return pagedUtil;
+    }
+
+    public TkEntityColumnMapConvert getMapConverter() {
+        return mapConverter;
+    }
+
+    public TkMapperUtil(IPagedUtil pagedUtil) {
         this.pagedUtil = pagedUtil;
-    }
-
-    public void setMapConverter(EntityColumnMapConverter mapConverter) {
-        this.mapConverter = mapConverter;
-    }
-
-    public MapperUtil() {
-    }
-
-    public MapperUtil(IPagedUtil pagedUtil, EntityColumnMapConverter mapConverter) {
-        this.pagedUtil = pagedUtil;
-        this.mapConverter = mapConverter;
     }
 
     public <T> int add(BaseInsertMapper<T> dao, T entity, boolean ignoreNullField) {
@@ -125,34 +120,19 @@ public class MapperUtil implements Serializable {
     }
 
     public <T> List<T> selectList(SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
-        Example search = new Example(getEntityClass(dao));
+        Example search = new Example(fetchEntityClass(dao));
         initExampleCriteria(search, searchConditions);
         return dao.selectByExample(search);
     }
 
-//    public <T> List<T> getList(Class<T> clazz, SelectByExampleMapper<T> dao, List<PropertyCondition> searchConditions) {
-//        Example search = new Example(clazz);
-//        initExampleCriteria(search, searchConditions);
-//        return dao.selectByExample(search);
-//    }
-
     public <T> PagedList<T> selectPagedList(RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
-        Example search = new Example(getEntityClass(dao));
+        Example search = new Example(fetchEntityClass(dao));
         initExampleCriteria(search, searchConditions);
         initExampleOrderBy(search, pagedBounds, false);
         RowBounds rowBounds = pagedUtil.convertToRowBounds(pagedBounds);
         List<T> list = dao.selectByExampleAndRowBounds(search, rowBounds);
         return pagedUtil.convertToPagedList(list, pagedBounds);
     }
-
-//    public <T> PagedList<T> getPagedList(Class<T> clazz, RowBoundsMapper<T> dao, List<PropertyCondition> searchConditions, PagedBounds pagedBounds) {
-//        Example search = new Example(clazz);
-//        initExampleCriteria(search, searchConditions);
-//        initExampleOrderBy(search, pagedBounds, false);
-//        RowBounds rowBounds = pagedUtil.convertToRowBounds(pagedBounds);
-//        List<T> list = dao.selectByExampleAndRowBounds(search, rowBounds);
-//        return pagedUtil.convertToPagedList(list, pagedBounds);
-//    }
 
     protected void initExampleCriteria(Example example, List<PropertyCondition> searchConditions) {
         if (searchConditions == null || example == null) return;
@@ -161,7 +141,7 @@ public class MapperUtil implements Serializable {
             if (condition == null || StringUtils.isEmpty(condition.getLogicName()) || condition.getCompareOperator() == null || condition.getCompareValue() == null) {
                 continue;
             }
-            EntityColumn entityColumn = mapConverter.getEntityColumn(example.getEntityClass(), condition.getLogicName());
+            //EntityColumn entityColumn = mapConverter.getEntityColumn(example.getEntityClass(), condition.getLogicName());
             switch (condition.getCompareOperator()) {
                 case Equal:
                     criteria = criteria.andEqualTo(condition.getLogicName(), condition.getCompareValue());
@@ -242,7 +222,8 @@ public class MapperUtil implements Serializable {
         }
     }
 
-    private Class<?> getEntityClass(Object mapper) {
-        return (Class<?>) ((ParameterizedType) mapper.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    protected Class<?> fetchEntityClass(Object mapper) {
+        Class<?> clazz = (Class<?>) (mapper.getClass().getGenericInterfaces()[0]);
+        return (Class<?>) ((ParameterizedType) clazz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
     }
 }

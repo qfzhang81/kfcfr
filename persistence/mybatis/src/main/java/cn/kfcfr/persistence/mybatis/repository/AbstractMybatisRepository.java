@@ -6,10 +6,7 @@ import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pojo.PropertyCondition;
 import cn.kfcfr.persistence.common.repository.ICrudWithConvertRepository;
 import cn.kfcfr.persistence.common.repository.ISelectWithConvertRepository;
-import cn.kfcfr.persistence.mybatis.mapper.CommonCrudMapper;
-import cn.kfcfr.persistence.mybatis.mapper.CommonReadonlyMapper;
-import cn.kfcfr.persistence.mybatis.mapper.EntityColumnMapConverter;
-import cn.kfcfr.persistence.mybatis.mapper.MapperUtil;
+import cn.kfcfr.persistence.mybatis.mapper.*;
 import cn.kfcfr.persistence.mybatis.pagination.IPagedUtil;
 
 import java.util.List;
@@ -19,8 +16,7 @@ import java.util.List;
  */
 public abstract class AbstractMybatisRepository<M, T> implements ICrudWithConvertRepository<M, T>, ISelectWithConvertRepository<M, T> {
     private static IPagedUtil pagedUtil;
-    private static MapperUtil mapperUtil;
-    private final EntityColumnMapConverter mapConverter = new EntityColumnMapConverter();
+    private static TkMapperUtil mapperUtil;
 
     protected IPagedUtil getPagedUtil() {
         if (pagedUtil == null) {
@@ -33,11 +29,11 @@ public abstract class AbstractMybatisRepository<M, T> implements ICrudWithConver
         return pagedUtil;
     }
 
-    protected MapperUtil getMapperUtil() {
+    protected TkMapperUtil getMapperUtil() {
         if (mapperUtil == null) {
             synchronized (this) {
                 if (mapperUtil == null) {
-                    mapperUtil = new MapperUtil(getPagedUtil(), mapConverter);
+                    mapperUtil = new TkMapperUtil(getPagedUtil());
                 }
             }
         }
@@ -46,9 +42,9 @@ public abstract class AbstractMybatisRepository<M, T> implements ICrudWithConver
 
     protected abstract IPagedUtil createPagedUtil();
 
-    protected abstract CommonCrudMapper<T> getCrudMapper();
+    protected abstract TkCrudMapper<T> getCrudMapper();
 
-    protected abstract CommonReadonlyMapper<T> getReadonlyMapper();
+    protected abstract TkReadonlyMapper<T> getReadonlyMapper();
 
     protected abstract BeanConverter<M, T> getConverter();
 

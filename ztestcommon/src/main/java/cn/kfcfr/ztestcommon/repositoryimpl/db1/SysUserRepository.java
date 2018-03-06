@@ -3,8 +3,8 @@ package cn.kfcfr.ztestcommon.repositoryimpl.db1;
 import cn.kfcfr.core.constant.Operator;
 import cn.kfcfr.core.convert.BeanConverter;
 import cn.kfcfr.core.pojo.PropertyCondition;
-import cn.kfcfr.persistence.mybatis.mapper.CommonCrudMapper;
-import cn.kfcfr.persistence.mybatis.mapper.CommonReadonlyMapper;
+import cn.kfcfr.persistence.mybatis.mapper.TkCrudMapper;
+import cn.kfcfr.persistence.mybatis.mapper.TkReadonlyMapper;
 import cn.kfcfr.ztestcommon.converter.SysUserConverter;
 import cn.kfcfr.ztestcommon.dao.db1.ISysUserDao;
 import cn.kfcfr.ztestcommon.entity.SysUserEntity;
@@ -31,12 +31,12 @@ public class SysUserRepository extends AbstractMybatisRepositoryImpl<SysUser, Sy
     }
 
     @Override
-    protected CommonCrudMapper<SysUserEntity> getCrudMapper() {
+    protected TkCrudMapper<SysUserEntity> getCrudMapper() {
         return sysUserDao;
     }
 
     @Override
-    protected CommonReadonlyMapper<SysUserEntity> getReadonlyMapper() {
+    protected TkReadonlyMapper<SysUserEntity> getReadonlyMapper() {
         return sysUserDao;
     }
 

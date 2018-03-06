@@ -1,8 +1,8 @@
 package cn.kfcfr.ztestcommon.repositoryimpl.db2;
 
 import cn.kfcfr.core.convert.BeanConverter;
-import cn.kfcfr.persistence.mybatis.mapper.CommonCrudMapper;
-import cn.kfcfr.persistence.mybatis.mapper.CommonReadonlyMapper;
+import cn.kfcfr.persistence.mybatis.mapper.TkCrudMapper;
+import cn.kfcfr.persistence.mybatis.mapper.TkReadonlyMapper;
 import cn.kfcfr.ztestcommon.converter.SyncUserConverter;
 import cn.kfcfr.ztestcommon.dao.db2.ISyncUserDao;
 import cn.kfcfr.ztestcommon.entity.SyncUserEntity;
@@ -26,12 +26,12 @@ public class SyncUserRepository extends AbstractMybatisRepositoryImpl<SysUser, S
     }
 
     @Override
-    protected CommonCrudMapper getCrudMapper() {
+    protected TkCrudMapper getCrudMapper() {
         return syncUserDao;
     }
 
     @Override
-    protected CommonReadonlyMapper getReadonlyMapper() {
+    protected TkReadonlyMapper getReadonlyMapper() {
         return syncUserDao;
     }
 

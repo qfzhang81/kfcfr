@@ -10,7 +10,7 @@ import tk.mybatis.mapper.entity.IDynamicTableName;
 /**
  * Created by zhangqf on 2017/6/9.
  */
-public interface CommonReadonlyMapper<T> extends BaseSelectMapper<T>
+public interface TkReadonlyMapper<T> extends BaseSelectMapper<T>
         , SelectByExampleMapper<T>
         , SelectCountByExampleMapper<T>
         , RowBoundsMapper<T>
