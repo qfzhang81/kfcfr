@@ -6,7 +6,6 @@ import cn.kfcfr.core.generator.id.GenerateLongWithDiffMinute;
 import cn.kfcfr.core.generator.id.IGenerateLong;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,13 +66,16 @@ public class GenerateLongUtilsImpl implements GenerateLongUtils {
     @Override
     public long[] generateArray(int length) {
         List<LongRange> lst = generateIdLong.getList(length);
-        List<Long> rst = new ArrayList<>();
+        long[] rst = new long[length];
+        int index = 0;
         for (LongRange range : lst) {
             for (long id = range.getFrom(); id <= range.getTo(); id++) {
-                rst.add(id);
+                rst[index] = id;
+                index++;
             }
         }
-        return rst.stream().mapToLong(t -> t.longValue()).toArray();
+        return rst;
+        //return rst.stream().mapToLong(t -> t.longValue()).toArray();
     }
 
     /***

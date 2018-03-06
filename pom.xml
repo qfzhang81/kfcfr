@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <jdk.version>1.8</jdk.version>
+        <jdk.version>1.7</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.version>${project.version}</project.build.version>
         <project.build.timestamp.utc>${maven.build.timestamp}</project.build.timestamp.utc>
@@ -76,7 +76,8 @@
         <netflix.version>0.3.0</netflix.version>
         <hystrix.version>1.5.12</hystrix.version>
         <eureka.version>1.7.0</eureka.version>
-        <servo.core.version>0.12.17</servo.core.version>
+        <!--<servo.core.version>0.12.17</servo.core.version>--> <!-- JDK1.8 -->
+        <servo.core.version>0.10.0</servo.core.version> <!-- JDK1.7 -->
         <servo.internal.version>0.10.1</servo.internal.version>
         <fastjson-version>1.2.15</fastjson-version>
         <javax.mail.version>1.4.7</javax.mail.version>
