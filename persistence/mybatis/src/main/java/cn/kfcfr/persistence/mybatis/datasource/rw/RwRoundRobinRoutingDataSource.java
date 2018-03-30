@@ -28,7 +28,7 @@ public class RwRoundRobinRoutingDataSource extends AbstractRoutingDataSource {
             throw new NullPointerException("TypeKey cannot be null.");
         }
         String rtnKey = WriterPrefix;
-        if (!Boolean.parseBoolean(typeKey)) {
+        if (readerSize > 0 && !Boolean.parseBoolean(typeKey)) {
             //读库， 轮询方式负载均衡
             int number = count.getAndAdd(1);
             int lookupKey = number % readerSize + 1;
