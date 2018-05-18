@@ -1,8 +1,8 @@
 package cn.kfcfr.core.math;
 
+import cn.kfcfr.core.convert.DateConvert;
 import org.apache.commons.lang3.StringUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,12 +13,10 @@ public class DateCalc {
     /***
      * 计算指定月份的月份加减结果
      */
-    public static String calcMonth(String month, int monthDiff, String format) throws ParseException {
+    public static String calcMonth(String month, int monthDiff, String format) {
         if (StringUtils.isBlank(month)) return "";
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        Date date = sdf.parse(month);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        SimpleDateFormat sdf = generateDate(month, format);
+        Calendar calendar = sdf.getCalendar();
         calendar.add(Calendar.MONTH, monthDiff);
         return sdf.format(calendar.getTime());
     }
@@ -26,19 +24,17 @@ public class DateCalc {
     /***
      * 计算指定月份的上月
      */
-    public static String calcPreviousMonth(String month, String format) throws ParseException {
+    public static String calcPreviousMonth(String month, String format) {
         return calcMonth(month, -1, format);
     }
 
     /***
      * 得到指定月份的最后一天
      */
-    public static Date getLastDayOfMonth(String month, String format) throws ParseException {
+    public static Date getLastDayOfMonth(String month, String format) {
         if (StringUtils.isBlank(month)) return null;
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        Date date = sdf.parse(month);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        SimpleDateFormat sdf = generateDate(month, format);
+        Calendar calendar = sdf.getCalendar();
         int day = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         calendar.set(Calendar.DAY_OF_MONTH, day);
         return calendar.getTime();
@@ -47,13 +43,20 @@ public class DateCalc {
     /***
      * 得到指定月份的天数
      */
-    public static Integer getDayOfMonth(String month, String format) throws ParseException {
+    public static Integer getDayOfMonth(String month, String format) {
         if (StringUtils.isBlank(month)) return null;
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        Date date = sdf.parse(month);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        SimpleDateFormat sdf = generateDate(month, format);
+        Calendar calendar = sdf.getCalendar();
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    /***
+     * 生成SimpleDateFormat对象
+     */
+    protected static SimpleDateFormat generateDate(String month, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        DateConvert.parseString(month, sdf);
+        return sdf;
     }
 
     /***

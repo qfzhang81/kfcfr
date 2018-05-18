@@ -31,10 +31,9 @@ public abstract class BeanConverter<T1, T2> {
      * T2列表转成T1列表
      * @param t2list T2列表
      * @return T1列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public List<T1> listT2ToT1(List<T2> t2list) throws ReflectiveOperationException {
-        List<T1> t1list = t2list.getClass().newInstance();
+    public List<T1> listT2ToT1(List<T2> t2list) {
+        List<T1> t1list = ClassInstance.newInstance(t2list.getClass());
         if (getT1Class().isAssignableFrom(getT2Class())) {
             for (T1 t1 : t1list) {
                 t2list.add((T2) t1);
@@ -50,10 +49,9 @@ public abstract class BeanConverter<T1, T2> {
      * T1列表转成T2列表
      * @param t1list T1列表
      * @return T2列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public List<T2> listT1ToT2(List<T1> t1list) throws ReflectiveOperationException {
-        List<T2> t2list = t1list.getClass().newInstance();
+    public List<T2> listT1ToT2(List<T1> t1list) {
+        List<T2> t2list = ClassInstance.newInstance(t1list.getClass());
         if (getT2Class().isAssignableFrom(getT1Class())) {
             for (T1 t1 : t1list) {
                 t2list.add((T2) t1);
@@ -69,9 +67,8 @@ public abstract class BeanConverter<T1, T2> {
      * T2对象转成T1对象
      * @param t2 T2对象
      * @return T1对象
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public T1 convertT2ToT1(T2 t2) throws ReflectiveOperationException {
+    public T1 convertT2ToT1(T2 t2) {
         return BeanConvert.cast(getT2Class(), getT1Class(), t2);
     }
 
@@ -79,9 +76,8 @@ public abstract class BeanConverter<T1, T2> {
      * T1对象转成T2对象
      * @param t1 T1对象
      * @return T2对象
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public T2 convertT1ToT2(T1 t1) throws ReflectiveOperationException {
+    public T2 convertT1ToT2(T1 t1) {
         return BeanConvert.cast(getT1Class(), getT2Class(), t1);
     }
 
@@ -89,9 +85,8 @@ public abstract class BeanConverter<T1, T2> {
      * T2分页列表转成T1分页列表
      * @param t2paged T2分页列表
      * @return T1分页列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public PagedList<T1> pagedT2ToT1(PagedList<T2> t2paged) throws ReflectiveOperationException {
+    public PagedList<T1> pagedT2ToT1(PagedList<T2> t2paged) {
         List<T1> t1List = BeanConvert.castList(getT2Class(), getT1Class(), t2paged.getList());
         return new PagedList<>(t1List, t2paged.getTotal(), t2paged.getPagedBounds());
     }
@@ -100,9 +95,8 @@ public abstract class BeanConverter<T1, T2> {
      * T1分页列表转成T2分页列表
      * @param t1paged T1分页列表
      * @return T2分页列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public PagedList<T2> pagedT1ToT2(PagedList<T1> t1paged) throws ReflectiveOperationException {
+    public PagedList<T2> pagedT1ToT2(PagedList<T1> t1paged) {
         List<T2> t1List = BeanConvert.castList(getT1Class(), getT2Class(), t1paged.getList());
         return new PagedList<>(t1List, t1paged.getTotal(), t1paged.getPagedBounds());
     }

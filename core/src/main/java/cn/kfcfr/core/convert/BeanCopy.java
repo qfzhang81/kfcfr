@@ -18,12 +18,11 @@ public class BeanCopy {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public static <S, T> T copyProperties(S source, Class<?> targetClazz) throws ReflectiveOperationException {
+    public static <S, T> T copyProperties(S source, Class<?> targetClazz) {
         if (source == null) throw new IllegalArgumentException("Parameter 'source' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
-        T target = (T) targetClazz.newInstance();
+        T target = ClassInstance.newInstance(targetClazz);
         BeanCopier bc = BeanCopier.create(source.getClass(), targetClazz, false);
         copyProperties(bc, source, target);
         return target;
@@ -54,9 +53,8 @@ public class BeanCopy {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public static <S, T> List<T> copyProperties(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList, List<T> targetList) throws ReflectiveOperationException {
+    public static <S, T> List<T> copyProperties(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList, List<T> targetList) {
         if (sourceClazz == null) throw new IllegalArgumentException("Parameter 'sourceClazz' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
         if (sourceList == null) throw new IllegalArgumentException("Parameter 'sourceList' cannot be null.");
@@ -65,7 +63,7 @@ public class BeanCopy {
         copyProperties(bc, sourceList, targetList);
         bc = BeanCopier.create(sourceClazz, targetClazz, false);
         for (S source : sourceList) {
-            T target = (T) targetClazz.newInstance();
+            T target = ClassInstance.newInstance(targetClazz);
             copyProperties(bc, source, target);
             targetList.add(target);
         }
@@ -80,13 +78,12 @@ public class BeanCopy {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public static <S, T> List<T> copyProperties(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList) throws ReflectiveOperationException {
+    public static <S, T> List<T> copyProperties(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList) {
         if (sourceClazz == null) throw new IllegalArgumentException("Parameter 'sourceClazz' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
         if (sourceList == null) throw new IllegalArgumentException("Parameter 'sourceList' cannot be null.");
-        List<T> targetList = sourceList.getClass().newInstance();
+        List<T> targetList = ClassInstance.newInstance(sourceList.getClass());
         copyProperties(sourceClazz, targetClazz, sourceList, targetList);
         return targetList;
     }

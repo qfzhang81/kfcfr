@@ -18,9 +18,8 @@ public class BeanConvert {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    protected static <S, T> T cast(Class<?> sourceClazz, Class<?> targetClazz, S source, T target) throws ReflectiveOperationException {
+    protected static <S, T> T cast(Class<?> sourceClazz, Class<?> targetClazz, S source, T target) {
         if (sourceClazz == null) throw new IllegalArgumentException("Parameter 'sourceClazz' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
         if (source == null) throw new IllegalArgumentException("Parameter 'source' cannot be null.");
@@ -42,13 +41,12 @@ public class BeanConvert {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public static <S, T> T cast(Class<?> sourceClazz, Class<?> targetClazz, S source) throws ReflectiveOperationException {
+    public static <S, T> T cast(Class<?> sourceClazz, Class<?> targetClazz, S source) {
         if (sourceClazz == null) throw new IllegalArgumentException("Parameter 'sourceClazz' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
         if (source == null) throw new IllegalArgumentException("Parameter 'source' cannot be null.");
-        T target = (T) targetClazz.newInstance();
+        T target = ClassInstance.newInstance(targetClazz);
         return cast(sourceClazz, targetClazz, source, target);
     }
 
@@ -61,9 +59,8 @@ public class BeanConvert {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public static <S, T> List<T> castList(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList, List<T> targetList) throws ReflectiveOperationException {
+    public static <S, T> List<T> castList(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList, List<T> targetList) {
         if (sourceClazz == null) throw new IllegalArgumentException("Parameter 'sourceClazz' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
         if (sourceList == null) throw new IllegalArgumentException("Parameter 'sourceList' cannot be null.");
@@ -85,13 +82,12 @@ public class BeanConvert {
      * @param <S> 源对象类型
      * @param <T> 目标对象类型
      * @return 目标对象列表
-     * @throws ReflectiveOperationException 由Class<T>.newInstance()抛出
      */
-    public static <S, T> List<T> castList(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList) throws ReflectiveOperationException {
+    public static <S, T> List<T> castList(Class<?> sourceClazz, Class<?> targetClazz, List<S> sourceList) {
         if (sourceClazz == null) throw new IllegalArgumentException("Parameter 'sourceClazz' cannot be null.");
         if (targetClazz == null) throw new IllegalArgumentException("Parameter 'targetClazz' cannot be null.");
         if (sourceList == null) throw new IllegalArgumentException("Parameter 'sourceList' cannot be null.");
-        List<T> targetList = sourceList.getClass().newInstance();
+        List<T> targetList = ClassInstance.newInstance(sourceList.getClass());
         return castList(sourceClazz, targetClazz, sourceList, targetList);
     }
 }

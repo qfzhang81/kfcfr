@@ -19,10 +19,14 @@ public class JsonConvert {
      * 序列化成字符串
      * @param value 需要序列化的对象
      * @return 字符串
-     * @throws JsonProcessingException 转换失败抛出的异常
      */
-    public static String serialize(Object value) throws JsonProcessingException {
-        return createJsonMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(value);
+    public static String serialize(Object value) {
+        try {
+            return createJsonMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(value);
+        }
+        catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /***
@@ -31,37 +35,29 @@ public class JsonConvert {
      * @param clazz 对象类型
      * @param <T> 对象类型
      * @return 对象
-     * @throws IOException 转换失败抛出的异常
      */
-    public static <T> T deserialize(String value, Class<T> clazz) throws IOException {
-        return createJsonMapper().readValue(value, clazz);
+    public static <T> T deserialize(String value, Class<T> clazz) {
+        try {
+            return createJsonMapper().readValue(value, clazz);
+        }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /***
-     * 对象转成JSON字符串
+     * 对象转成JSON字符串。如有异常，返回异常信息字符串
      * @param value 对象
-     * @return JSON字符串。有异常不抛出
      */
     public static String toJsonString(Object value) {
-        return toJsonString(value, false);
-    }
-
-    /***
-     * 对象转成JSON字符串
-     * @param value 对象
-     * @param throwException 如有异常是否抛出
-     * @return JSON字符串
-     */
-    public static String toJsonString(Object value, boolean throwException) {
         String str = "{}";
         try {
-            str = createJsonMapper().writeValueAsString(value);
-        }
-        catch (JsonProcessingException e) {
-            e.printStackTrace();
-            if (throwException) {
-                throw new RuntimeException(e);
+            if (value != null) {
+                str = createJsonMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(value);
             }
+        }
+        catch (JsonProcessingException ex) {
+            str = ex.getMessage();
         }
         return str;
     }
