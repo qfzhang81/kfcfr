@@ -1,6 +1,6 @@
 package cn.kfcfr.core.convert;
 
-import org.springframework.cglib.beans.BeanCopier;
+import net.sf.cglib.beans.BeanCopier;
 
 import java.io.*;
 import java.util.List;

@@ -1,5 +1,6 @@
 package cn.kfcfr.core.convert;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,7 +22,7 @@ public class JsonConvert {
      * @throws JsonProcessingException 转换失败抛出的异常
      */
     public static String serialize(Object value) throws JsonProcessingException {
-        return createJsonMapper().writeValueAsString(value);
+        return createJsonMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(value);
     }
 
     /***
@@ -39,15 +40,28 @@ public class JsonConvert {
     /***
      * 对象转成JSON字符串
      * @param value 对象
-     * @return JSON字符串
+     * @return JSON字符串。有异常不抛出
      */
     public static String toJsonString(Object value) {
+        return toJsonString(value, false);
+    }
 
+    /***
+     * 对象转成JSON字符串
+     * @param value 对象
+     * @param throwException 如有异常是否抛出
+     * @return JSON字符串
+     */
+    public static String toJsonString(Object value, boolean throwException) {
         String str = "{}";
         try {
             str = createJsonMapper().writeValueAsString(value);
-        } catch (JsonProcessingException e) {
+        }
+        catch (JsonProcessingException e) {
             e.printStackTrace();
+            if (throwException) {
+                throw new RuntimeException(e);
+            }
         }
         return str;
     }
