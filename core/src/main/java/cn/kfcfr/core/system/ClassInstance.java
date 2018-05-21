@@ -1,4 +1,6 @@
-package cn.kfcfr.core.convert;
+package cn.kfcfr.core.system;
+
+import cn.kfcfr.core.exception.WrappedException;
 
 import java.text.MessageFormat;
 
@@ -9,7 +11,7 @@ public class ClassInstance {
             return (T) clazz.newInstance();
         }
         catch (ReflectiveOperationException ex) {
-            throw new RuntimeException(MessageFormat.format("New an instance for '{0}' failed.", clazz), ex);
+            throw new WrappedException(MessageFormat.format("New an instance for '{0}' failed.", clazz), ex);
         }
     }
 }

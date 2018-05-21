@@ -1,6 +1,7 @@
 package cn.kfcfr.core.convert;
 
 import cn.kfcfr.core.constant.DateTimeConstant;
+import cn.kfcfr.core.exception.WrappedException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
@@ -36,7 +37,7 @@ public class DateConvert {
             return sdf.parse(value);
         }
         catch (ParseException ex) {
-            throw new IllegalArgumentException(MessageFormat.format("{0} does not fit the format '{1}'.", value, sdf.toPattern()), ex);
+            throw new WrappedException(MessageFormat.format("{0} does not fit the format '{1}'.", value, sdf.toPattern()), ex);
         }
     }
 

@@ -1,10 +1,12 @@
 package cn.kfcfr.core.convert;
 
+import cn.kfcfr.core.exception.WrappedException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 
 /**
  * Created by zhangqf77 on 2018/2/28.
@@ -25,7 +27,7 @@ public class JsonConvert {
             return createJsonMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(value);
         }
         catch (JsonProcessingException ex) {
-            throw new RuntimeException(ex);
+            throw new WrappedException(MessageFormat.format("Serialize {0} to json failed.", value), ex);
         }
     }
 
@@ -41,7 +43,7 @@ public class JsonConvert {
             return createJsonMapper().readValue(value, clazz);
         }
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new WrappedException(MessageFormat.format("Deserialize {0} to {1} from json failed.", value, clazz), ex);
         }
     }
 

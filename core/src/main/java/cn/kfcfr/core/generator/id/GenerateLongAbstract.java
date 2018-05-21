@@ -1,5 +1,6 @@
 package cn.kfcfr.core.generator.id;
 
+import cn.kfcfr.core.exception.WrappedException;
 import cn.kfcfr.core.generator.LongRange;
 
 import java.util.ArrayList;
@@ -113,7 +114,7 @@ public abstract class GenerateLongAbstract implements IGenerateLong {
                 }
                 catch (Exception ex) {
                     //发生错误，记录并退出生成
-                    notExpectedEx = new RuntimeException("Error occurred in while when generating id.", ex);
+                    notExpectedEx = new WrappedException("Error occurred in while when generating id.", ex);
                     break;
                 }
             }
@@ -150,7 +151,7 @@ public abstract class GenerateLongAbstract implements IGenerateLong {
      */
     protected abstract long createTs(Date date);
 
-    protected abstract void sleepInGenerate() throws InterruptedException;
+    protected abstract void sleepInGenerate();
 
     /***
      * 组合成一个ID

@@ -1,6 +1,7 @@
 package cn.kfcfr.core.convert;
 
 import cn.kfcfr.core.pagination.PagedList;
+import cn.kfcfr.core.system.ClassInstance;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;

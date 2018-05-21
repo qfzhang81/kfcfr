@@ -1,14 +1,20 @@
 package cn.kfcfr.core.convert;
 
+import cn.kfcfr.core.exception.WrappedException;
+import cn.kfcfr.core.system.ClassInstance;
 import net.sf.cglib.beans.BeanCopier;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
  * Created by zhangqf on 2017/6/8.
  */
-@SuppressWarnings(value = {"unchecked", "WeakerAccess"})
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
 public class BeanCopy {
 
     /***
@@ -97,23 +103,47 @@ public class BeanCopy {
      * @param source 源对象，不能为null
      * @param <T> 对象类型
      * @return 目标对象
-     * @throws IOException 由流对象抛出
-     * @throws ClassNotFoundException 由流对象抛出
      */
-    public static <T> T deepClone(T source) throws IOException, ClassNotFoundException {
+    public static <T> T deepClone(T source) {
         if (source == null) throw new IllegalArgumentException("Parameter 'source' cannot be null.");
-        //将对象写到流里进行深度拷贝
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(byteArrayOutputStream);
-        oos.writeObject(source);//将对象写到流里
-        oos.flush();
-        oos.close();
+        Object target;
+        ObjectOutputStream oos = null;
+        ObjectInputStream ois = null;
+        try {
+            //将对象写到流里进行深度拷贝
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(byteArrayOutputStream);
+            oos.writeObject(source);//将对象写到流里
+            oos.flush();
+            oos.close();
+            oos = null;
 
-        byte[] arrByte = byteArrayOutputStream.toByteArray();
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(arrByte);
-        ObjectInputStream ois = new ObjectInputStream(byteArrayInputStream);
-        Object target = ois.readObject();//从流里读出来
-        ois.close();
+            byte[] arrByte = byteArrayOutputStream.toByteArray();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(arrByte);
+            ois = new ObjectInputStream(byteArrayInputStream);
+            target = ois.readObject();//从流里读出来
+            ois.close();
+            ois = null;
+        }
+        catch (Exception ex) {
+            throw new WrappedException(MessageFormat.format("Copy {0} failed.", source), ex);
+        }
+        finally {
+            try {
+                if (oos != null) {
+                    oos.close();
+                    oos = null;
+                }
+                if (ois != null) {
+                    ois.close();
+                    ois = null;
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
         return (T) target;
     }
 }

@@ -36,9 +36,8 @@ public interface GenerateLongUtils {
      * @param clazz 对象类型
      * @param propertyName 要填充ID的属性名，类型必须为Long
      * @param <T> 对象类型
-     * @throws ReflectiveOperationException 反射抛出的异常
      */
-    <T> void addWithOneByOne(List<T> list, Class<T> clazz, String propertyName) throws ReflectiveOperationException;
+    <T> void addWithOneByOne(List<T> list, Class<T> clazz, String propertyName);
 
     /***
      * 根据规则生成一个顺序ID，并填充到对象列表的指定属性名
@@ -46,7 +45,6 @@ public interface GenerateLongUtils {
      * @param clazz 对象类型
      * @param propertyName 要填充ID的属性名，类型必须为Long
      * @param <T> 对象类型
-     * @throws ReflectiveOperationException 反射抛出的异常
      */
-    <T> void addWithSame(List<T> list, Class<T> clazz, String propertyName) throws ReflectiveOperationException;
+    <T> void addWithSame(List<T> list, Class<T> clazz, String propertyName);
 }

@@ -1,5 +1,7 @@
 package cn.kfcfr.core.system;
 
+import cn.kfcfr.core.exception.WrappedException;
+
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -10,10 +12,9 @@ public class SystemInformation {
         try {
             return InetAddress.getLocalHost();
         }
-        catch (UnknownHostException e) {
-            e.printStackTrace();
+        catch (UnknownHostException ex) {
+            throw new WrappedException(ex);
         }
-        return null;
     }
 
     public static String getLocalIp() {

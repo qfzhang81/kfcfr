@@ -1,5 +1,7 @@
 package cn.kfcfr.core.convert;
 
+import cn.kfcfr.core.system.ClassInstance;
+
 import java.util.List;
 
 /**

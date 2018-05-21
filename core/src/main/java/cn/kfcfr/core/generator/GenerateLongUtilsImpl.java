@@ -2,10 +2,12 @@ package cn.kfcfr.core.generator;
 
 
 import cn.kfcfr.core.convert.IntegerConvert;
+import cn.kfcfr.core.exception.WrappedException;
 import cn.kfcfr.core.generator.id.GenerateLongWithDiffMinute;
 import cn.kfcfr.core.generator.id.IGenerateLong;
 
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -84,9 +86,8 @@ public class GenerateLongUtilsImpl implements GenerateLongUtils {
      * @param clazz 对象类型
      * @param propertyName 要填充ID的属性名，类型必须为Long
      * @param <T> 对象类型
-     * @throws ReflectiveOperationException 反射抛出的异常
      */
-    public <T> void addWithOneByOne(List<T> list, Class<T> clazz, String propertyName) throws ReflectiveOperationException {
+    public <T> void addWithOneByOne(List<T> list, Class<T> clazz, String propertyName) {
         if (list == null || list.size() == 0) return;
         //生成id
         List<LongRange> idList = generateList(list.size());
@@ -101,9 +102,8 @@ public class GenerateLongUtilsImpl implements GenerateLongUtils {
      * @param clazz 对象类型
      * @param propertyName 要填充ID的属性名，类型必须为Long
      * @param <T> 对象类型
-     * @throws ReflectiveOperationException 反射抛出的异常
      */
-    public <T> void addWithSame(List<T> list, Class<T> clazz, String propertyName) throws ReflectiveOperationException {
+    public <T> void addWithSame(List<T> list, Class<T> clazz, String propertyName) {
         if (list == null || list.size() == 0) return;
         //生成id
         long valId = generateOne();
@@ -119,18 +119,22 @@ public class GenerateLongUtilsImpl implements GenerateLongUtils {
      * @param value 要填充的值
      * @param valueClazz 值的类型
      * @param <T> 对象类型
-     * @throws ReflectiveOperationException 反射抛出的异常
      */
-    protected static <T> void addValueWithSame(List<T> list, Class<T> listClazz, String propertyName, Object value, Class<?> valueClazz) throws ReflectiveOperationException {
+    protected static <T> void addValueWithSame(List<T> list, Class<T> listClazz, String propertyName, Object value, Class<?> valueClazz) {
         if (list == null || list.size() == 0) return;
-        //检查属性名，得到set方法
-        String methodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
-        Method method = listClazz.getMethod(methodName, valueClazz);
-        //逐个填充
-        if (method != null) {
-            for (T t : list) {
-                method.invoke(t, value);
+        try {
+            //检查属性名，得到set方法
+            String methodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+            Method method = listClazz.getMethod(methodName, valueClazz);
+            //逐个填充
+            if (method != null) {
+                for (T t : list) {
+                    method.invoke(t, value);
+                }
             }
+        }
+        catch (Exception ex) {
+            throw new WrappedException(MessageFormat.format("Failed to fit property '{0}' with value '{1}'.", propertyName, value), ex);
         }
     }
 
@@ -141,36 +145,40 @@ public class GenerateLongUtilsImpl implements GenerateLongUtils {
      * @param propertyName 要填充ID的属性名，类型必须为Long
      * @param idList 顺序ID列表
      * @param <T> 对象类型
-     * @throws ReflectiveOperationException 反射抛出的异常
      */
-    protected static <T> void addIdWithDiff(List<T> list, Class<T> clazz, String propertyName, List<LongRange> idList) throws ReflectiveOperationException {
+    protected static <T> void addIdWithDiff(List<T> list, Class<T> clazz, String propertyName, List<LongRange> idList) {
         if (list == null || list.size() == 0) return;
         if (idList == null || idList.size() == 0) return;
-        //检查属性名，得到set方法
-        String methodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
-        Method method = clazz.getMethod(methodName, Long.class);
-        //逐个填充id
-        if (method != null) {
-            int idIndex = 0;
-            LongRange longRange = idList.get(idIndex);
-            long valId = -1;
-            for (T t : list) {
-                if (valId < 0) {
-                    //初始化
-                    valId = longRange.getFrom();
+        try {
+            //检查属性名，得到set方法
+            String methodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+            Method method = clazz.getMethod(methodName, Long.class);
+            //逐个填充id
+            if (method != null) {
+                int idIndex = 0;
+                LongRange longRange = idList.get(idIndex);
+                long valId = -1;
+                for (T t : list) {
+                    if (valId < 0) {
+                        //初始化
+                        valId = longRange.getFrom();
+                    }
+                    else {
+                        valId++;
+                    }
+                    if (valId > longRange.getTo()) {
+                        //已到本段末尾，移到下一段
+                        idIndex++;
+                        longRange = idList.get(idIndex);
+                        valId = longRange.getFrom();
+                    }
+                    //赋值
+                    method.invoke(t, valId);
                 }
-                else {
-                    valId++;
-                }
-                if (valId > longRange.getTo()) {
-                    //已到本段末尾，移到下一段
-                    idIndex++;
-                    longRange = idList.get(idIndex);
-                    valId = longRange.getFrom();
-                }
-                //赋值
-                method.invoke(t, valId);
             }
+        }
+        catch (Exception ex) {
+            throw new WrappedException(MessageFormat.format("Failed to fit property '{0}'.", propertyName), ex);
         }
     }
 }

@@ -1,5 +1,6 @@
 package cn.kfcfr.core.generator.id;
 
+import cn.kfcfr.core.exception.WrappedException;
 import cn.kfcfr.core.system.SystemInformation;
 import org.apache.commons.lang3.StringUtils;
 
@@ -121,8 +122,13 @@ public class GenerateLongWithDiffBase extends GenerateLongAbstract {
     }
 
     @Override
-    protected void sleepInGenerate() throws InterruptedException {
-        Thread.sleep(1000);
+    protected void sleepInGenerate() {
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException ex) {
+            throw new WrappedException("Error occurred when thread do sleep.", ex);
+        }
     }
 
     @Override

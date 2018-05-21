@@ -2,6 +2,7 @@ package cn.kfcfr.core.generator.id;
 
 import cn.kfcfr.core.convert.IntegerConvert;
 import cn.kfcfr.core.convert.LongConvert;
+import cn.kfcfr.core.exception.WrappedException;
 import cn.kfcfr.core.math.IntCalc;
 import cn.kfcfr.core.math.LongCalc;
 import cn.kfcfr.core.system.SystemInformation;
@@ -130,8 +131,13 @@ public class GenerateLongWithTimestampBase extends GenerateLongAbstract {
     }
 
     @Override
-    protected void sleepInGenerate() throws InterruptedException {
-        Thread.sleep(1000);
+    protected void sleepInGenerate() {
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException ex) {
+            throw new WrappedException("Error occurred when thread do sleep.", ex);
+        }
     }
 
     @Override
