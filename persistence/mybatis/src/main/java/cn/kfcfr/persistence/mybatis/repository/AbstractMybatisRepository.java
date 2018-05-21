@@ -99,25 +99,25 @@ public abstract class AbstractMybatisRepository<M, T> implements ICrudWithConver
 
     //region 实现ICrudWithConvertRepository<M, T>接口
     @Override
-    public int addWithConvert(M model, boolean ignoreNullField) throws ReflectiveOperationException {
+    public int addWithConvert(M model, boolean ignoreNullField) {
         T entity = getConverter().convertT1ToT2(model);
         return getMapperUtil().add(getCrudMapper(), entity, ignoreNullField);
     }
 
     @Override
-    public int addWithConvert(List<M> models, boolean ignoreNullField) throws ReflectiveOperationException {
+    public int addWithConvert(List<M> models, boolean ignoreNullField) {
         List<T> entities = getConverter().listT1ToT2(models);
         return getMapperUtil().add(getCrudMapper(), entities, ignoreNullField);
     }
 
     @Override
-    public int updateWithConvert(M model, boolean ignoreNullField) throws ReflectiveOperationException {
+    public int updateWithConvert(M model, boolean ignoreNullField) {
         T entity = getConverter().convertT1ToT2(model);
         return getMapperUtil().update(getCrudMapper(), entity, ignoreNullField);
     }
 
     @Override
-    public int updateWithConvert(List<M> models, boolean ignoreNullField) throws ReflectiveOperationException {
+    public int updateWithConvert(List<M> models, boolean ignoreNullField) {
         List<T> entities = getConverter().listT1ToT2(models);
         return getMapperUtil().update(getCrudMapper(), entities, ignoreNullField);
     }
@@ -125,25 +125,25 @@ public abstract class AbstractMybatisRepository<M, T> implements ICrudWithConver
 
     //region 实现ISelectWithConvertRepository<M, T>接口
     @Override
-    public M selectWithConvertByKey(Object key) throws ReflectiveOperationException {
+    public M selectWithConvertByKey(Object key) {
         T entity = getMapperUtil().selectByKey(getReadonlyMapper(), key);
         return getConverter().convertT2ToT1(entity);
     }
 
     @Override
-    public M selectOneWithConvert(List<PropertyCondition> searchConditions) throws ReflectiveOperationException {
+    public M selectOneWithConvert(List<PropertyCondition> searchConditions) {
         T entity = getMapperUtil().selectOne(getReadonlyMapper(), searchConditions);
         return getConverter().convertT2ToT1(entity);
     }
 
     @Override
-    public List<M> selectListWithConvert(List<PropertyCondition> searchConditions) throws ReflectiveOperationException {
+    public List<M> selectListWithConvert(List<PropertyCondition> searchConditions) {
         List<T> list = getMapperUtil().selectList(getReadonlyMapper(), searchConditions);
         return getConverter().listT2ToT1(list);
     }
 
     @Override
-    public PagedList<M> selectPagedListWithConvert(PagedBounds pagedBounds, List<PropertyCondition> searchConditions) throws ReflectiveOperationException {
+    public PagedList<M> selectPagedListWithConvert(PagedBounds pagedBounds, List<PropertyCondition> searchConditions) {
         PagedList<T> pagedList = getMapperUtil().selectPagedList(getReadonlyMapper(), searchConditions, pagedBounds);
         return getConverter().pagedT2ToT1(pagedList);
     }

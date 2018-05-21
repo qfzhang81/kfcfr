@@ -1,5 +1,6 @@
 package cn.kfcfr.persistence.mybatis.datasource;
 
+import cn.kfcfr.core.exception.WrappedException;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,7 +20,7 @@ public abstract class AbstractDataSourceConfiguration {
 
     public abstract void setConfigLocation(String configLocation);
 
-    public SqlSessionFactory createSqlSessionFactory(DataSource dataSource, String mapperPath) throws Exception {
+    public SqlSessionFactory createSqlSessionFactory(DataSource dataSource, String mapperPath) {
         final SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
 
@@ -37,12 +38,14 @@ public abstract class AbstractDataSourceConfiguration {
             return sessionFactoryBean.getObject();
         }
         catch (IOException ex) {
-            logger.error("Resolver mapper*xml is error", ex);
-            throw ex;
+            String msg = "Resolver mapper*xml is error";
+            logger.error(msg, ex);
+            throw new WrappedException(msg, ex);
         }
         catch (Exception ex) {
-            logger.error("SqlSessionFactoryBean create error", ex);
-            throw ex;
+            String msg = "SqlSessionFactoryBean create error";
+            logger.error(msg, ex);
+            throw new WrappedException(msg, ex);
         }
     }
 
