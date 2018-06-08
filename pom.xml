@@ -19,6 +19,7 @@
         <module>ztestresource</module>
         <module>ztestcommon</module>
         <module>scheduler</module>
+        <module>mq</module>
     </modules>
 
     <properties>
@@ -654,22 +655,22 @@
                 <version>${quartz.version}</version>
             </dependency>
 
-            <!-- MQ -->
-            <dependency>
-                <groupId>org.springframework.amqp</groupId>
-                <artifactId>spring-rabbit</artifactId>
-                <version>${spring.amqp.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.amqp</groupId>
-                <artifactId>spring-amqp</artifactId>
-                <version>${spring.amqp.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.rabbitmq</groupId>
-                <artifactId>amqp-client</artifactId>
-                <version>${rabbitmq.version}</version>
-            </dependency>
+            <!--&lt;!&ndash; MQ &ndash;&gt;-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.amqp</groupId>-->
+                <!--<artifactId>spring-rabbit</artifactId>-->
+                <!--<version>${spring.amqp.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.amqp</groupId>-->
+                <!--<artifactId>spring-amqp</artifactId>-->
+                <!--<version>${spring.amqp.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.rabbitmq</groupId>-->
+                <!--<artifactId>amqp-client</artifactId>-->
+                <!--<version>${rabbitmq.version}</version>-->
+            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
