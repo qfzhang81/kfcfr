@@ -62,7 +62,7 @@ public class DefaultConsumerChannel<T extends AbstractConsumerListener> extends 
                             logger.debug(MessageFormat.format("Confirm ok when consume '{0}'.", message));
                         }
                         else {
-                            boolean reQueue = false;
+                            final boolean reQueue = false;
                             channel.basicReject(envelope.getDeliveryTag(), reQueue);
                             logger.debug(MessageFormat.format("Reject and re queue={1} when consume '{0}'.", message, reQueue));
                         }
