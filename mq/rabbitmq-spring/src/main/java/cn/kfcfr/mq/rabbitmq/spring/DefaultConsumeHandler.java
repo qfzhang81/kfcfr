@@ -18,10 +18,10 @@ public class DefaultConsumeHandler extends AbstractMqHandler {
 
     protected SimpleMessageListenerContainer container;
 
-    public DefaultConsumeHandler(ConnectionFactory factory, String[] queueNames, ConsumerDeliveryListener listener) {
+    public DefaultConsumeHandler(ConnectionFactory factory, ConsumerDeliveryListener listener, String... queueNames) {
         this.connectionFactory = factory;
-        this.queueNames = queueNames;
         this.listener = listener;
+        this.queueNames = queueNames;
         init();
         createConsumer();
     }

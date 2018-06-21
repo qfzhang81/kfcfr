@@ -1,7 +1,7 @@
 package cn.kfcfr.mq.rabbitmq.spring;
 
 import cn.kfcfr.core.convert.JsonConvert;
-import cn.kfcfr.core.convert.StringConvert;
+import cn.kfcfr.mq.rabbitmq.helper.RabbitMessageHelper;
 import cn.kfcfr.mq.rabbitmq.listener.ConfirmCallBackData;
 import cn.kfcfr.mq.rabbitmq.listener.ConfirmCallBackListener;
 import cn.kfcfr.mq.rabbitmq.listener.ReturnCallBackData;
@@ -44,15 +44,6 @@ public class DefaultPublishHandler<T extends AbstractMessage> extends AbstractMq
         mandatory = true;
     }
 
-    protected String convertByteToString(byte[] content, String encoding) {
-        if (StringUtils.isBlank(encoding)) {
-            return StringConvert.parseByte(content, DEFAULT_CHARSET.name());
-        }
-        else {
-            return StringConvert.parseByte(content, encoding);
-        }
-    }
-
     protected void createTemplate() {
         template = new RabbitTemplate(connectionFactory);
         template.setMandatory(mandatory);
@@ -69,7 +60,7 @@ public class DefaultPublishHandler<T extends AbstractMessage> extends AbstractMq
             template.setReturnCallback(new RabbitTemplate.ReturnCallback() {
                 public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
                     logger.debug(MessageFormat.format("ReturnCallback for text:{0}. code:{1}. exchange:{2}. routingKey:{3}. message:{4}." + routingKey, replyText, replyCode, exchange, routingKey, message));
-                    String content = convertByteToString(message.getBody(), message.getMessageProperties().getContentEncoding());
+                    String content = RabbitMessageHelper.convertBodyToString(message.getBody(), charset, DEFAULT_CHARSET);
                     returnCallBackListener.returnedMessage(new ReturnCallBackData(content, replyCode, replyText, exchange, routingKey));
                 }
             });
@@ -80,13 +71,7 @@ public class DefaultPublishHandler<T extends AbstractMessage> extends AbstractMq
         boolean rst = false;
         try {
             AbstractMessage message = singleMessage.getMessage();
-            byte[] bodyByte;
-            if (message.getCharset() != null) {
-                bodyByte = message.getBody().getBytes(message.getCharset());
-            }
-            else {
-                bodyByte = message.getBody().getBytes(DEFAULT_CHARSET);
-            }
+            byte[] bodyByte = RabbitMessageHelper.convertBodyToBytes(message.getBody(), charset, DEFAULT_CHARSET);
             CorrelationData correlationData = null;
             if (!StringUtils.isBlank(message.getId())) {
                 correlationData = new CorrelationData(message.getId());

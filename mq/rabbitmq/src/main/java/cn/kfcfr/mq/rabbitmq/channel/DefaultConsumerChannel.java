@@ -1,5 +1,6 @@
 package cn.kfcfr.mq.rabbitmq.channel;
 
+import cn.kfcfr.mq.rabbitmq.helper.RabbitMessageHelper;
 import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryData;
 import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryListener;
 import com.rabbitmq.client.*;
@@ -12,18 +13,17 @@ import java.text.MessageFormat;
  * Created by zhangqf77 on 2018/5/23.
  */
 public class DefaultConsumerChannel extends AbstractChannel {
-    protected final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     protected boolean autoAck;
     protected ConsumerDeliveryListener listener;
     protected Charset charset;
 
-    protected String queueName;
+    protected String[] queueNames;
     protected Channel channel;
 
-    public DefaultConsumerChannel(ConnectionFactory factory, String queueName, ConsumerDeliveryListener listener) {
+    public DefaultConsumerChannel(ConnectionFactory factory, ConsumerDeliveryListener listener, String... queueNames) {
         this.factory = factory;
-        this.queueName = queueName;
         this.listener = listener;
+        this.queueNames = queueNames;
         init();
     }
 
@@ -35,15 +35,11 @@ public class DefaultConsumerChannel extends AbstractChannel {
         try {
             channel = getChannel();
             channel.basicQos(1);
-            charset = listener.getCharset();
-            if (charset == null) {
-                charset = DEFAULT_CHARSET;
-            }
             // 创建队列消费者
             final Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    String message = new String(body, charset);
+                    String message = RabbitMessageHelper.convertBodyToString(body, listener.getCharset(), DEFAULT_CHARSET);
                     logger.debug(MessageFormat.format("Begin consume '{0}'.", message));
                     boolean rst;
                     try {
@@ -70,7 +66,9 @@ public class DefaultConsumerChannel extends AbstractChannel {
                     }
                 }
             };
-            channel.basicConsume(queueName, autoAck, consumer);
+            for (String queueName : queueNames) {
+                channel.basicConsume(queueName, autoAck, consumer);
+            }
         }
         catch (Exception ex) {
             logger.error(ex.getMessage(), ex);

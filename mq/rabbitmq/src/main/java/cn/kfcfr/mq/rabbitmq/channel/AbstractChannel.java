@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeoutException;
  */
 public abstract class AbstractChannel {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     protected ConnectionFactory factory;
     protected Connection connection;
 
