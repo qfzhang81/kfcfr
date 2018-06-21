@@ -1,12 +1,32 @@
 package cn.kfcfr.core.convert;
 
+import cn.kfcfr.core.exception.WrappedException;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 
 /**
  * Created by zhangqf77 on 2018/2/22.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess"})
 public class StringConvert {
+    /***
+     * Byte数组转成字符串，指定编码
+     * @param content Byte数组
+     * @param encoding 编码
+     * @return 字符串
+     */
+    public static String parseByte(byte[] content, String encoding) {
+        try {
+            return new String(content, encoding);
+        }
+        catch (UnsupportedEncodingException ex) {
+            throw new WrappedException(MessageFormat.format("Convert bytes to string with encoding {0} failed.", encoding), ex);
+        }
+    }
+
+
     /***
      * 去掉字符串末尾的指定字符
      * @param value 字符串

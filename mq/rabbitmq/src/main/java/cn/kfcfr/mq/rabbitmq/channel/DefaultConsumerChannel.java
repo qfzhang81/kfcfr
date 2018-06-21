@@ -1,6 +1,7 @@
 package cn.kfcfr.mq.rabbitmq.channel;
 
-import cn.kfcfr.mq.rabbitmq.listener.AbstractConsumerListener;
+import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryData;
+import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryListener;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -10,16 +11,16 @@ import java.text.MessageFormat;
 /**
  * Created by zhangqf77 on 2018/5/23.
  */
-public class DefaultConsumerChannel<T extends AbstractConsumerListener> extends AbstractChannel {
+public class DefaultConsumerChannel extends AbstractChannel {
     protected final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     protected boolean autoAck;
-    protected T listener;
+    protected ConsumerDeliveryListener listener;
     protected Charset charset;
 
     protected String queueName;
     protected Channel channel;
 
-    public DefaultConsumerChannel(ConnectionFactory factory, String queueName, T listener) {
+    public DefaultConsumerChannel(ConnectionFactory factory, String queueName, ConsumerDeliveryListener listener) {
         this.factory = factory;
         this.queueName = queueName;
         this.listener = listener;
@@ -46,7 +47,7 @@ public class DefaultConsumerChannel<T extends AbstractConsumerListener> extends 
                     logger.debug(MessageFormat.format("Begin consume '{0}'.", message));
                     boolean rst;
                     try {
-                        rst = listener.handle(consumerTag, message, envelope.getDeliveryTag());
+                        rst = listener.handle(new ConsumerDeliveryData(consumerTag, properties.getCorrelationId(), message, envelope.getDeliveryTag(), envelope.getRoutingKey()));
                         logger.debug(MessageFormat.format("Return '{1}' when consume '{0}'.", message, rst));
                     }
                     catch (Exception ex) {
