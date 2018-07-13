@@ -7,7 +7,6 @@ import cn.kfcfr.mq.rabbitmq.message.BatchMessage;
 import cn.kfcfr.mq.rabbitmq.message.SingleMessage;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import java.nio.charset.Charset;
@@ -27,8 +26,6 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
 
     protected String exchangeName;
     protected Charset charset;
-    protected ConnectionFactory factory;
-    protected Connection connection;
 
     public AbstractPublisherChannel(ConnectionFactory factory, String exchangeName, Charset charset, boolean confirms, boolean returns, long waitForConfirmMillisecond, boolean mandatory, boolean immediate) {
         this.factory = factory;

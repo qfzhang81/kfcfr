@@ -11,7 +11,7 @@
     <artifactId>kfcfr-mq-rabbitmq</artifactId>
 
     <properties>
-        <rabbitmq.version>5.2.0</rabbitmq.version>
+        <rabbitmq.version>4.7.0</rabbitmq.version>
     </properties>
 
     <dependencies>
