@@ -60,7 +60,7 @@ public class RabbitMqFactory {
             channel.exchangeDeclare(exchangeName, exchangeType, true, false, null);
         }
         catch (Exception ex) {
-            String msg = MessageFormat.format("An error occurred when creating exchange '{0}'.", exchangeName);
+            String msg = MessageFormat.format("An error occurred when creating exchange ''{0}''.", exchangeName);
             logger.error(msg, ex);
             throw new WrappedException(msg, ex);
         }
@@ -94,7 +94,7 @@ public class RabbitMqFactory {
             channel.queueDeclare(queueName, true, false, false, null);
         }
         catch (Exception ex) {
-            String msg = MessageFormat.format("An error occurred when creating queue '{0}'.", queueName);
+            String msg = MessageFormat.format("An error occurred when creating queue ''{0}''.", queueName);
             logger.error(msg, ex);
             throw new WrappedException(msg, ex);
         }
@@ -116,7 +116,7 @@ public class RabbitMqFactory {
             channel.exchangeBind(targetExchange, sourceExchange, bindingKey);
         }
         catch (Exception ex) {
-            String msg = MessageFormat.format("An error occurred when creating bind for exchange, from '{0}' to '{1}'.", sourceExchange, targetExchange);
+            String msg = MessageFormat.format("An error occurred when creating bind for exchange, from ''{0}'' to ''{1}''.", sourceExchange, targetExchange);
             logger.error(msg, ex);
             throw new WrappedException(msg, ex);
         }
@@ -138,7 +138,7 @@ public class RabbitMqFactory {
             channel.queueBind(queueName, exchangeName, bindingKey);
         }
         catch (Exception ex) {
-            String msg = MessageFormat.format("An error occurred when creating bind for queue '{0}' to exchange '{1}'.", queueName, exchangeName);
+            String msg = MessageFormat.format("An error occurred when creating bind for queue ''{0}'' to exchange ''{1}''.", queueName, exchangeName);
             logger.error(msg, ex);
             throw new WrappedException(msg, ex);
         }

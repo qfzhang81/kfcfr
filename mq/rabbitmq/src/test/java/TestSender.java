@@ -1,15 +1,15 @@
 import cn.kfcfr.mq.rabbitmq.RabbitMqFactory;
 import cn.kfcfr.mq.rabbitmq.channel.ChannelFactory;
 import cn.kfcfr.mq.rabbitmq.channel.PersistentPublisherChannel;
-import cn.kfcfr.mq.rabbitmq.message.SingleMessage;
 import cn.kfcfr.mq.rabbitmq.message.TopicMessage;
 import com.rabbitmq.client.ConnectionFactory;
 
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
+import java.util.List;
 
 /**
  * Created by zhangqf77 on 2018/7/13.
@@ -36,16 +36,17 @@ public class TestSender extends Thread {
             return;
         }
 
-        Random randomIntNumber = new Random();
+//        Random randomIntNumber = new Random();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         try {
             PersistentPublisherChannel<TopicMessage> channel = ChannelFactory.createPersistentPublisher(factory, EXCHANGE_NAME, Charset.forName("UTF-8"));
+            System.out.println("Test send single.");
             int num = 0;
             while (true) {
                 num++;
                 String routingKey = "hello." + num % 10;
-                TopicMessage message = new TopicMessage(MessageFormat.format("Hello World! Thread ID: {0}, Random Num: {1}", this.currentThread().getId(), randomIntNumber.nextInt()), routingKey);
-                channel.publishSingle(new SingleMessage(message));
+                TopicMessage message = new TopicMessage(MessageFormat.format("Single, Hello World! Thread ID: {0}, Num: {1}", this.currentThread().getId(), num), routingKey);
+                channel.publishSingle(message);
                 System.out.println(MessageFormat.format("{0}[{3}] Sent seq = {1} with routing key = {2}", sdf.format(new Date()), num, routingKey, this.getId()));
                 if (num >= 300) break;
                 try {
@@ -57,6 +58,18 @@ public class TestSender extends Thread {
                     e.printStackTrace();
                 }
             }
+            Thread.sleep(10000);
+            System.out.println("Test send batch.");
+            num = 0;
+            List<TopicMessage> list = new ArrayList<>();
+            while (true) {
+                num++;
+                String routingKey = "hello." + num % 10;
+                TopicMessage message = new TopicMessage(MessageFormat.format("Batch, Hello World! Thread ID: {0}, Num: {1}", this.currentThread().getId(), num), routingKey);
+                list.add(message);
+                if (num >= 300) break;
+            }
+            channel.publishBatch(list);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());

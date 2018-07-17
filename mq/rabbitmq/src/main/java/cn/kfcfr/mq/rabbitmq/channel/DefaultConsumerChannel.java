@@ -40,28 +40,28 @@ public class DefaultConsumerChannel extends AbstractChannel {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     String message = RabbitMessageHelper.convertBodyToString(body, listener.getCharset(), DEFAULT_CHARSET);
-                    logger.debug(MessageFormat.format("Begin consume '{0}'.", message));
+                    logger.debug(MessageFormat.format("Begin consume ''{0}''.", message));
                     boolean rst;
                     try {
                         rst = listener.handle(new ConsumerDeliveryData(consumerTag, properties.getCorrelationId(), message, envelope.getDeliveryTag(), envelope.getRoutingKey()));
-                        logger.debug(MessageFormat.format("Return '{1}' when consume '{0}'.", message, rst));
+                        logger.debug(MessageFormat.format("Return ''{1}'' when consume ''{0}''.", message, rst));
                     }
                     catch (Exception ex) {
                         rst = false;
-                        logger.error(MessageFormat.format("An exception occurred when consume '{0}'.", message), ex);
+                        logger.error(MessageFormat.format("An exception occurred when consume ''{0}''.", message), ex);
                     }
                     if (autoAck) {
-                        logger.debug(MessageFormat.format("Auto ack when consume '{0}'.", message));
+                        logger.debug(MessageFormat.format("Auto ack when consume ''{0}''.", message));
                     }
                     else {
                         if (rst) {
                             channel.basicAck(envelope.getDeliveryTag(), false);
-                            logger.debug(MessageFormat.format("Confirm ok when consume '{0}'.", message));
+                            logger.debug(MessageFormat.format("Confirm ok when consume ''{0}''.", message));
                         }
                         else {
                             final boolean reQueue = false;
                             channel.basicReject(envelope.getDeliveryTag(), reQueue);
-                            logger.debug(MessageFormat.format("Reject and re queue={1} when consume '{0}'.", message, reQueue));
+                            logger.debug(MessageFormat.format("Reject and re queue={1} when consume ''{0}''.", message, reQueue));
                         }
                     }
                 }

@@ -37,6 +37,8 @@ public abstract class AbstractChannel {
     protected void closeChannel(Channel channel) {
         try {
             if (channel != null && channel.isOpen()) {
+                channel.clearConfirmListeners();
+                channel.clearReturnListeners();
                 channel.close();
             }
         }

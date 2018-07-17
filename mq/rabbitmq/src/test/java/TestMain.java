@@ -3,7 +3,7 @@ import java.io.IOException;
 /**
  * Created by zhangqf77 on 2018/7/13.
  */
-public class TestSingleMain {
+public class TestMain {
     public static void main(String[] args) throws IOException, InterruptedException {
         TestSender send = new TestSender();
         send.start();
