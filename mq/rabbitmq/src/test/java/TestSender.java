@@ -48,9 +48,9 @@ public class TestSender extends Thread {
                 TopicMessage message = new TopicMessage(MessageFormat.format("Single, Hello World! Thread ID: {0}, Num: {1}", this.currentThread().getId(), num), routingKey);
                 channel.publishSingle(message);
                 System.out.println(MessageFormat.format("{0}[{3}] Sent seq = {1} with routing key = {2}", sdf.format(new Date()), num, routingKey, this.getId()));
-                if (num >= 300) break;
+                if (num >= 100) break;
                 try {
-                    if (num % 100 == 0) {
+                    if (num % 30 == 0) {
                         Thread.sleep(2000);
                     }
                 }
@@ -67,7 +67,7 @@ public class TestSender extends Thread {
                 String routingKey = "hello." + num % 10;
                 TopicMessage message = new TopicMessage(MessageFormat.format("Batch, Hello World! Thread ID: {0}, Num: {1}", this.currentThread().getId(), num), routingKey);
                 list.add(message);
-                if (num >= 300) break;
+                if (num >= 200) break;
             }
             channel.publishBatch(list);
         }

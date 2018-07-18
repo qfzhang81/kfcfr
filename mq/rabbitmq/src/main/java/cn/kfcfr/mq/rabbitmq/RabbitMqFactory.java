@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 /**
  * Created by zhangqf77 on 2018/7/5.
  */
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "all"})
 public class RabbitMqFactory {
     protected final static Logger logger = LoggerFactory.getLogger(RabbitMqFactory.class);
 

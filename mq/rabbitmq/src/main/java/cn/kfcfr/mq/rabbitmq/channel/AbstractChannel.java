@@ -13,6 +13,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by zhangqf77 on 2018/6/8.
  */
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
 public abstract class AbstractChannel {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");

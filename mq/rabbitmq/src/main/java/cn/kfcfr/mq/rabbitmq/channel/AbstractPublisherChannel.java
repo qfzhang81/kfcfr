@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by zhangqf77 on 2018/5/23.
  */
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
 public abstract class AbstractPublisherChannel<T extends AbstractMessage> extends AbstractChannel {
-    //    protected boolean returns;
-    protected long waitForConfirmMillisecond;
+    protected long waitForConfirmMillisecond;//确认时默认超时时间，毫秒
     protected boolean mandatory;
     protected boolean immediate;
     protected boolean durable;
@@ -42,10 +42,6 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
         this.confirmCallBackListener = confirmCallBackListener;
         this.returnCallBackListener = returnCallBackListener;
         this.failedListener = failedListener;
-//        this.waitForConfirmMillisecond = waitForConfirmMillisecond;
-//        this.returns = returns;
-//        this.mandatory = mandatory;
-//        this.immediate = immediate;
         init();
     }
 
@@ -56,6 +52,10 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
     }
 
     public boolean publishSingle(T message) {
+        return publishSingle(message, waitForConfirmMillisecond);
+    }
+
+    public boolean publishSingle(T message, long confirmTimeoutMillisecond) {
         if (message == null) {
             throw new NullPointerException();
         }
@@ -72,30 +72,12 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                 public void handleAck(long deliveryTag, boolean multiple) throws IOException {
                     logger.debug(MessageFormat.format("Server return ack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
                     confirm(unconfirmedMap, deliveryTag, multiple, null, true);
-//                    if (confirmCallBackListener != null) {
-//                        confirmCallBackListener.confirm(new ConfirmCallBackData(message.getMessageId(), true, ""));
-//                    }
-//                    if (multiple) {
-//                        unconfirmedMap.headMap(deliveryTag + 1).clear();
-//                    }
-//                    else {
-//                        unconfirmedMap.remove(deliveryTag);
-//                    }
                 }
 
                 @Override
                 public void handleNack(long deliveryTag, boolean multiple) throws IOException {
                     logger.debug(MessageFormat.format("Server return nack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
                     confirm(unconfirmedMap, deliveryTag, multiple, null, false);
-//                    if (confirmCallBackListener != null) {
-//                        confirmCallBackListener.confirm(new ConfirmCallBackData(message.getMessageId(), false, ""));
-//                    }
-//                    if (multiple) {
-//                        unconfirmedMap.headMap(deliveryTag + 1).clear();
-//                    }
-//                    else {
-//                        unconfirmedMap.remove(deliveryTag);
-//                    }
                 }
             });
             byte[] bodyByte = RabbitMessageHelper.convertBodyToBytes(message.getBody(), charset);
@@ -106,7 +88,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
             channel.basicPublish(exchangeName, message.getRoutingKey(), mandatory, immediate, basicProperties, bodyByte);
             unconfirmedMap.put(nextSeqNo, message);
             isPublished = true;
-            rst = channel.waitForConfirms(waitForConfirmMillisecond);
+            rst = channel.waitForConfirms(confirmTimeoutMillisecond);
             logger.debug(MessageFormat.format("Return ''{1}'' for confirm when push ''{0}''.", json, rst));
         }
         catch (Exception ex) {
@@ -131,6 +113,10 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
     }
 
     public boolean publishBatch(List<T> messageList) {
+        return publishBatch(messageList, waitForConfirmMillisecond);
+    }
+
+    public boolean publishBatch(List<T> messageList, long confirmTimeoutMillisecond) {
         if (messageList == null) {
             throw new NullPointerException();
         }
@@ -179,7 +165,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                 unpublishedMap.remove(message.getMessageId());
             }
             //等待完成
-            rst = countDownLatch.await(waitForConfirmMillisecond, TimeUnit.MILLISECONDS);
+            rst = countDownLatch.await(confirmTimeoutMillisecond, TimeUnit.MILLISECONDS);
             logger.debug(MessageFormat.format("The await of countDownLatch returns ''{0}''.", rst));
         }
         catch (Exception ex) {
@@ -260,47 +246,4 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
             }
         }
     }
-
-//    private void send(Channel channel, T message, SortedMap<Long, T> unConfirmedMap) throws IOException {
-//        byte[] bodyByte = RabbitMessageHelper.convertBodyToBytes(message.getBody(), charset);
-//        String json = JsonConvert.toJsonString(message);
-//        long nextSeqNo = channel.getNextPublishSeqNo();
-//        logger.debug(MessageFormat.format("Ready to push ''{0}'' with SeqNo ''{1}''", json, nextSeqNo));
-//        channel.basicPublish(exchangeName, message.getRoutingKey(), mandatory, immediate, basicProperties, bodyByte);
-//        if (unConfirmedMap != null) {
-//            unConfirmedMap.put(nextSeqNo, message);
-//        }
-//    }
-
-//    protected class PublishThread extends Thread {
-//        private Channel channel;
-//        T message;
-//        long nextSeqNo;
-//        SortedMap<Long, T> unConfirmedMap;
-//
-//        public PublishThread(Channel channel, T message, long nextSeqNo, SortedMap<Long, T> unConfirmedMap) {
-//            this.channel = channel;
-//            this.message = message;
-//            this.nextSeqNo = nextSeqNo;
-//            this.unConfirmedMap = unConfirmedMap;
-//        }
-//
-//        @Override
-//        public void run() {
-//            byte[] bodyByte = RabbitMessageHelper.convertBodyToBytes(message.getBody(), charset, DEFAULT_CHARSET);
-//            String json = JsonConvert.toJsonString(message);
-//            logger.debug(MessageFormat.format("Ready to publish '{0}' with SeqNo '{1}'", json, nextSeqNo));
-//            try {
-//                channel.basicPublish(exchangeName, message.getRoutingKey(), mandatory, immediate, basicProperties, bodyByte);
-//                if (confirms && unConfirmedMap != null) {
-//                    unConfirmedMap.put(nextSeqNo, message);
-//                }
-//            }
-//            catch (Exception ex) {
-//                logger.error(ex.getMessage(), ex);
-//            }
-//        }
-//    }
-
-
 }

@@ -11,6 +11,7 @@ import java.util.UUID;
 /**
  * Created by zhangqf77 on 2018/5/23.
  */
+@SuppressWarnings(value = {"unchecked", "WeakerAccess"})
 public abstract class AbstractMessage implements Serializable {
     private static final long serialVersionUID = 8204603327071509051L;
     private static final SimpleDateFormat sdf = new SimpleDateFormat(DateTimeConstant.DATETIME_12_FORMAT);
@@ -19,8 +20,8 @@ public abstract class AbstractMessage implements Serializable {
     protected String messageId;
 
     public AbstractMessage(String body, String routingKey, String messageId) {
-        if (body == null || routingKey == null) {
-            throw new NullPointerException();
+        if (body == null) {
+            throw new NullPointerException("body cannot be null.");
         }
         this.body = body;
         this.routingKey = routingKey;
