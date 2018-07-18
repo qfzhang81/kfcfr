@@ -11,7 +11,7 @@ public class TestReceiverAll extends Thread {
     public void run() {
         ConnectionFactory factory = RabbitMqFactory.createFactory("27.115.67.203", 40066, "ittestuser", "1qaz@WSX", "it");
         try {
-            DefaultConsumerChannel channel = new DefaultConsumerChannel(factory, new TestHelloListener(QUEUE_NAME_ALL), QUEUE_NAME_ALL);
+            DefaultConsumerChannel channel = new DefaultConsumerChannel(factory, null, new TestConsumeHelloListener(QUEUE_NAME_ALL), QUEUE_NAME_ALL);
             channel.start();
         }
         catch (Exception e) {

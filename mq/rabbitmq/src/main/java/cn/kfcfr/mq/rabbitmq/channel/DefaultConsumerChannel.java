@@ -20,10 +20,16 @@ public class DefaultConsumerChannel extends AbstractChannel {
     protected String[] queueNames;
     protected Channel channel;
 
-    public DefaultConsumerChannel(ConnectionFactory factory, ConsumerDeliveryListener listener, String... queueNames) {
+    public DefaultConsumerChannel(ConnectionFactory factory, Charset charset, ConsumerDeliveryListener listener, String... queueNames) {
         this.factory = factory;
         this.listener = listener;
         this.queueNames = queueNames;
+        if (charset == null) {
+            this.charset = DEFAULT_CHARSET;
+        }
+        else {
+            this.charset = charset;
+        }
         init();
     }
 
@@ -39,16 +45,16 @@ public class DefaultConsumerChannel extends AbstractChannel {
             final Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    String message = RabbitMessageHelper.convertBodyToString(body, listener.getCharset(), DEFAULT_CHARSET);
+                    String message = RabbitMessageHelper.convertBodyToString(body, charset);
                     logger.debug(MessageFormat.format("Begin consume ''{0}''.", message));
                     boolean rst;
                     try {
                         rst = listener.handle(new ConsumerDeliveryData(consumerTag, properties.getCorrelationId(), message, envelope.getDeliveryTag(), envelope.getRoutingKey()));
-                        logger.debug(MessageFormat.format("Return ''{1}'' when consume ''{0}''.", message, rst));
+                        logger.debug(MessageFormat.format("Return ''{1}'' when handling ''{0}''.", message, rst));
                     }
                     catch (Exception ex) {
                         rst = false;
-                        logger.error(MessageFormat.format("An exception occurred when consume ''{0}''.", message), ex);
+                        logger.error(MessageFormat.format("An exception occurred when handling ''{0}''.", message), ex);
                     }
                     if (autoAck) {
                         logger.debug(MessageFormat.format("Auto ack when consume ''{0}''.", message));

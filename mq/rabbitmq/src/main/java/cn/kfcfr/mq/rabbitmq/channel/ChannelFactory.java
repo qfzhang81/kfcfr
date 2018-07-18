@@ -1,6 +1,9 @@
 package cn.kfcfr.mq.rabbitmq.channel;
 
+import cn.kfcfr.mq.rabbitmq.listener.ConfirmCallBackListener;
 import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryListener;
+import cn.kfcfr.mq.rabbitmq.listener.PublisherFailedListener;
+import cn.kfcfr.mq.rabbitmq.listener.ReturnCallBackListener;
 import cn.kfcfr.mq.rabbitmq.message.AbstractMessage;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -14,7 +17,11 @@ public class ChannelFactory {
         return new PersistentPublisherChannel<>(connectionFactory, exchangeName, charset);
     }
 
-    public static DefaultConsumerChannel createDefaultConsumer(ConnectionFactory connectionFactory, ConsumerDeliveryListener listener, String... queueNames) {
-        return new DefaultConsumerChannel(connectionFactory, listener, queueNames);
+    public static <T extends AbstractMessage> PersistentPublisherChannel<T> createPersistentPublisher(ConnectionFactory connectionFactory, String exchangeName, Charset charset, ConfirmCallBackListener confirmCallBackListener, ReturnCallBackListener returnCallBackListener, PublisherFailedListener failedListener) {
+        return new PersistentPublisherChannel<>(connectionFactory, exchangeName, charset, confirmCallBackListener, returnCallBackListener, failedListener);
+    }
+
+    public static DefaultConsumerChannel createDefaultConsumer(ConnectionFactory connectionFactory, Charset charset, ConsumerDeliveryListener listener, String... queueNames) {
+        return new DefaultConsumerChannel(connectionFactory, charset, listener, queueNames);
     }
 }

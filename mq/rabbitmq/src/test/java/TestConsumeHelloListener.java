@@ -8,11 +8,11 @@ import java.util.Date;
 /**
  * Created by zhangqf77 on 2018/7/13.
  */
-public class TestHelloListener extends AbstractConsumerListener {
+public class TestConsumeHelloListener extends AbstractConsumerListener {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private String queueName;
 
-    public TestHelloListener(String queueName) {
+    public TestConsumeHelloListener(String queueName) {
         this.queueName = queueName;
     }
 

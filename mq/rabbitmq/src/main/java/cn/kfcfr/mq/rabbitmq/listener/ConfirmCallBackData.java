@@ -7,18 +7,18 @@ import java.io.Serializable;
  */
 public class ConfirmCallBackData implements Serializable {
     private static final long serialVersionUID = 7886262356700678467L;
-    private String correlationDataId;
+    private String messageId;
     private boolean ack;
     private String cause;
 
-    public ConfirmCallBackData(String correlationDataId, boolean ack, String cause) {
-        this.correlationDataId = correlationDataId;
+    public ConfirmCallBackData(String messageId, boolean ack, String cause) {
+        this.messageId = messageId;
         this.ack = ack;
         this.cause = cause;
     }
 
-    public String getCorrelationDataId() {
-        return correlationDataId;
+    public String getMessageId() {
+        return messageId;
     }
 
     public boolean isAck() {
