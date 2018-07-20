@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
 public class DateCalc {
 
     /***

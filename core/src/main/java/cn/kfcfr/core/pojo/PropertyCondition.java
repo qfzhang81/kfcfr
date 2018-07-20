@@ -7,6 +7,7 @@ import java.io.Serializable;
 /**
  * Created by zhangqf on 2017/6/27.
  */
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
 public class PropertyCondition implements Serializable {
     private static final long serialVersionUID = 3351967808002455680L;
     private String logicName;
