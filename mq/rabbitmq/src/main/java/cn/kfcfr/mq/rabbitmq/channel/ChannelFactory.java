@@ -13,15 +13,15 @@ import java.nio.charset.Charset;
  * Created by zhangqf77 on 2018/5/23.
  */
 public class ChannelFactory {
-    public static <T extends AbstractMessage> PersistentPublisherChannel<T> createPersistentPublisher(ConnectionFactory connectionFactory, String exchangeName, Charset charset) {
+    public static <T extends AbstractMessage> PublisherChannel<T> createPersistentPublisher(ConnectionFactory connectionFactory, String exchangeName, Charset charset) {
         return new PersistentPublisherChannel<>(connectionFactory, exchangeName, charset);
     }
 
-    public static <T extends AbstractMessage> PersistentPublisherChannel<T> createPersistentPublisher(ConnectionFactory connectionFactory, String exchangeName, Charset charset, ConfirmCallBackListener confirmCallBackListener, ReturnCallBackListener returnCallBackListener, PublisherFailedListener failedListener) {
+    public static <T extends AbstractMessage> PublisherChannel<T> createPersistentPublisher(ConnectionFactory connectionFactory, String exchangeName, Charset charset, ConfirmCallBackListener confirmCallBackListener, ReturnCallBackListener returnCallBackListener, PublisherFailedListener failedListener) {
         return new PersistentPublisherChannel<>(connectionFactory, exchangeName, charset, confirmCallBackListener, returnCallBackListener, failedListener);
     }
 
-    public static DefaultConsumerChannel createDefaultConsumer(ConnectionFactory connectionFactory, Charset charset, ConsumerDeliveryListener listener, String... queueNames) {
+    public static ConsumerChannel createDefaultConsumer(ConnectionFactory connectionFactory, Charset charset, ConsumerDeliveryListener listener, String... queueNames) {
         return new DefaultConsumerChannel(connectionFactory, charset, listener, queueNames);
     }
 }

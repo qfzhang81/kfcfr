@@ -1,6 +1,6 @@
 import cn.kfcfr.mq.rabbitmq.RabbitMqFactory;
 import cn.kfcfr.mq.rabbitmq.channel.ChannelFactory;
-import cn.kfcfr.mq.rabbitmq.channel.PersistentPublisherChannel;
+import cn.kfcfr.mq.rabbitmq.channel.PublisherChannel;
 import cn.kfcfr.mq.rabbitmq.message.TopicMessage;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -39,7 +39,7 @@ public class TestSender extends Thread {
 //        Random randomIntNumber = new Random();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         try {
-            PersistentPublisherChannel<TopicMessage> channel = ChannelFactory.createPersistentPublisher(factory, EXCHANGE_NAME, Charset.forName("UTF-8"), new TestPublishConfirmListener(), new TestPublishReturnListener(), new TestPublishFailedListener());
+            PublisherChannel<TopicMessage> channel = ChannelFactory.createPersistentPublisher(factory, EXCHANGE_NAME, Charset.forName("UTF-8"), new TestPublishConfirmListener(), new TestPublishReturnListener(), new TestPublishFailedListener());
             System.out.println("Test send single.");
             int num = 0;
             while (true) {

@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
  * Created by zhangqf77 on 2018/5/23.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
-public abstract class AbstractPublisherChannel<T extends AbstractMessage> extends AbstractChannel {
+public abstract class AbstractPublisherChannel<T extends AbstractMessage> extends AbstractChannel implements PublisherChannel<T> {
     protected long waitForConfirmMillisecond;//确认时默认超时时间，毫秒
     protected boolean mandatory;
     protected boolean immediate;
-    protected boolean durable;
+//    protected boolean durable;
     protected AMQP.BasicProperties basicProperties;
 
     protected String exchangeName;
@@ -59,8 +59,8 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
         if (message == null) {
             throw new NullPointerException();
         }
-        Channel channel = null;
         boolean rst = false;
+        Channel channel = null;
         boolean isPublished = false;
         final SortedMap<Long, T> unconfirmedMap = new TreeMap<>();//已发送未确认列表
         try {
@@ -127,8 +127,8 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
             }
             unpublishedMap.put(message.getMessageId(), message);
         }
-        Channel channel = null;
         boolean rst = false;
+        Channel channel = null;
         final SortedMap<Long, T> unconfirmedMap = new TreeMap<>();//已发送未确认列表
         try {
             channel = getChannel();
@@ -139,7 +139,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                 @Override
                 public void handleAck(long deliveryTag, boolean multiple) throws IOException {
                     //确认收到
-                    logger.debug(MessageFormat.format("Server return Ack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
+                    logger.debug(MessageFormat.format("Server return ack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
                     synchronized (unconfirmedMap) {
                         confirm(unconfirmedMap, deliveryTag, multiple, countDownLatch, true);
                     }
@@ -148,7 +148,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                 @Override
                 public void handleNack(long deliveryTag, boolean multiple) throws IOException {
                     //没有收到
-                    logger.debug(MessageFormat.format("Server return Nack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
+                    logger.debug(MessageFormat.format("Server return nack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
                     synchronized (unconfirmedMap) {
                         confirm(unconfirmedMap, deliveryTag, multiple, countDownLatch, false);
                     }

@@ -25,7 +25,7 @@ public class PersistentPublisherChannel<T extends AbstractMessage> extends Abstr
     @Override
     protected void init() {
         super.init();
-        this.durable = true;
+//        this.durable = true;
         this.basicProperties = MessageProperties.PERSISTENT_TEXT_PLAIN;
     }
 }

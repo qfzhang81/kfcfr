@@ -1,4 +1,5 @@
 import cn.kfcfr.mq.rabbitmq.RabbitMqFactory;
+import cn.kfcfr.mq.rabbitmq.channel.ConsumerChannel;
 import cn.kfcfr.mq.rabbitmq.channel.DefaultConsumerChannel;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -11,7 +12,7 @@ public class TestReceiver369 extends Thread {
     public void run() {
         ConnectionFactory factory = RabbitMqFactory.createFactory("27.115.67.203", 40066, "ittestuser", "1qaz@WSX", "it");
         try {
-            DefaultConsumerChannel channel = new DefaultConsumerChannel(factory, null, new TestConsumeHelloListener(QUEUE_NAME_369), QUEUE_NAME_369);
+            ConsumerChannel channel = new DefaultConsumerChannel(factory, null, new TestConsumeHelloListener(QUEUE_NAME_369), QUEUE_NAME_369);
             channel.start();
         }
         catch (Exception e) {

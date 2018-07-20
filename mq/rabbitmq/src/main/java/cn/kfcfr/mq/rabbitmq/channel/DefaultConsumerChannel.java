@@ -13,7 +13,7 @@ import java.text.MessageFormat;
  * Created by zhangqf77 on 2018/5/23.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess"})
-public class DefaultConsumerChannel extends AbstractChannel {
+public class DefaultConsumerChannel extends AbstractChannel implements ConsumerChannel {
     protected boolean autoAck;
     protected ConsumerDeliveryListener listener;
     protected Charset charset;
