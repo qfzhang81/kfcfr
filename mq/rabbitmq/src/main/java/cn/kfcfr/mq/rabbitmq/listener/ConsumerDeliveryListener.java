@@ -7,6 +7,4 @@ import java.io.Serializable;
  */
 public interface ConsumerDeliveryListener extends Serializable {
     boolean handle(ConsumerDeliveryData data);
-
-//    Charset getCharset();
 }

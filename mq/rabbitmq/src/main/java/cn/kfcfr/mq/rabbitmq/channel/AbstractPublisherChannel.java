@@ -1,6 +1,7 @@
 package cn.kfcfr.mq.rabbitmq.channel;
 
 import cn.kfcfr.core.convert.JsonConvert;
+import cn.kfcfr.mq.rabbitmq.Publisher;
 import cn.kfcfr.mq.rabbitmq.helper.RabbitMessageHelper;
 import cn.kfcfr.mq.rabbitmq.listener.*;
 import cn.kfcfr.mq.rabbitmq.message.AbstractMessage;
@@ -17,11 +18,11 @@ import java.util.concurrent.TimeUnit;
  * Created by zhangqf77 on 2018/5/23.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
-public abstract class AbstractPublisherChannel<T extends AbstractMessage> extends AbstractChannel implements PublisherChannel<T> {
+public abstract class AbstractPublisherChannel<T extends AbstractMessage> extends AbstractChannel implements Publisher<T> {
     protected long waitForConfirmMillisecond;//确认时默认超时时间，毫秒
     protected boolean mandatory;
     protected boolean immediate;
-//    protected boolean durable;
+    //    protected boolean durable;
     protected AMQP.BasicProperties basicProperties;
 
     protected String exchangeName;
@@ -71,13 +72,13 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                 @Override
                 public void handleAck(long deliveryTag, boolean multiple) throws IOException {
                     logger.debug(MessageFormat.format("Server return ack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
-                    confirm(unconfirmedMap, deliveryTag, multiple, null, true);
+                    confirmToMap(unconfirmedMap, deliveryTag, multiple, null, true);
                 }
 
                 @Override
                 public void handleNack(long deliveryTag, boolean multiple) throws IOException {
                     logger.debug(MessageFormat.format("Server return nack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
-                    confirm(unconfirmedMap, deliveryTag, multiple, null, false);
+                    confirmToMap(unconfirmedMap, deliveryTag, multiple, null, false);
                 }
             });
             byte[] bodyByte = RabbitMessageHelper.convertBodyToBytes(message.getBody(), charset);
@@ -103,11 +104,11 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
             if (failedListener != null) {
                 failedListener.fail(new PublisherFailedData(message.getMessageId(), "unpublished"));
             }
-            if (rst) rst = false;
+            rst = false;
         }
         if (unconfirmedMap.size() > 0) {
-            fail(unconfirmedMap);
-            if (rst) rst = false;
+            failFromMap(unconfirmedMap);
+            rst = false;
         }
         return rst;
     }
@@ -141,7 +142,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                     //确认收到
                     logger.debug(MessageFormat.format("Server return ack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
                     synchronized (unconfirmedMap) {
-                        confirm(unconfirmedMap, deliveryTag, multiple, countDownLatch, true);
+                        confirmToMap(unconfirmedMap, deliveryTag, multiple, countDownLatch, true);
                     }
                 }
 
@@ -150,7 +151,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
                     //没有收到
                     logger.debug(MessageFormat.format("Server return nack, deliveryTag is ''{0}'', multiple is ''{1}''.", deliveryTag, multiple));
                     synchronized (unconfirmedMap) {
-                        confirm(unconfirmedMap, deliveryTag, multiple, countDownLatch, false);
+                        confirmToMap(unconfirmedMap, deliveryTag, multiple, countDownLatch, false);
                     }
                 }
             });
@@ -178,17 +179,12 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
         //检查是否完成
         if (unpublishedMap.size() > 0) {
             //有未发送的
-            for (T message : unpublishedMap.values()) {
-                logger.warn(MessageFormat.format("This is unpublished, message is ''{0}''.", JsonConvert.toJsonString(message)));
-                if (failedListener != null) {
-                    failedListener.fail(new PublisherFailedData(message.getMessageId(), "unpublished"));
-                }
-            }
+            unpublishedFromMap(unpublishedMap);
             if (rst) rst = false;
         }
         if (unconfirmedMap.size() > 0) {
             //有未确认的
-            fail(unconfirmedMap);
+            failFromMap(unconfirmedMap);
             if (rst) rst = false;
         }
         if (rst) {
@@ -210,7 +206,7 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
         }
     }
 
-    protected void confirm(SortedMap<Long, T> unconfirmedMap, long deliveryTag, boolean multiple, CountDownLatch countDownLatch, boolean ack) {
+    protected void confirmToMap(SortedMap<Long, T> unconfirmedMap, long deliveryTag, boolean multiple, CountDownLatch countDownLatch, boolean ack) {
         Set<Long> keySet;
         if (multiple) {
             keySet = unconfirmedMap.headMap(deliveryTag + 1).keySet();
@@ -237,7 +233,16 @@ public abstract class AbstractPublisherChannel<T extends AbstractMessage> extend
         }
     }
 
-    protected void fail(SortedMap<Long, T> unconfirmedMap) {
+    protected void unpublishedFromMap(Map<String, T> unpublishedMap) {
+        for (T message : unpublishedMap.values()) {
+            logger.warn(MessageFormat.format("This is unpublished, message is ''{0}''.", JsonConvert.toJsonString(message)));
+            if (failedListener != null) {
+                failedListener.fail(new PublisherFailedData(message.getMessageId(), "unpublished"));
+            }
+        }
+    }
+
+    protected void failFromMap(SortedMap<Long, T> unconfirmedMap) {
         for (Long seqNo : unconfirmedMap.keySet()) {
             T message = unconfirmedMap.get(seqNo);
             logger.warn(MessageFormat.format("The deliveryTag of ''{0}'' is unconfirmed, message is ''{1}''.", seqNo, JsonConvert.toJsonString(message)));

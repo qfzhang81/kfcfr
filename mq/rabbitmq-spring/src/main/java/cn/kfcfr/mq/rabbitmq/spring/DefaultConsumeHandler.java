@@ -1,5 +1,6 @@
 package cn.kfcfr.mq.rabbitmq.spring;
 
+import cn.kfcfr.mq.rabbitmq.Receiver;
 import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryListener;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -8,7 +9,7 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 /**
  * Created by zhangqf77 on 2018/6/20.
  */
-public class DefaultConsumeHandler extends AbstractMqHandler {
+public class DefaultConsumeHandler extends AbstractMqHandler implements Receiver {
     protected String[] queueNames;
     protected boolean exposeListenerChannel;
     protected int maxConcurrentConsumers;

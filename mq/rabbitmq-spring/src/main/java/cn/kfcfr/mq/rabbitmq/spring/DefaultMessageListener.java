@@ -28,7 +28,7 @@ public class DefaultMessageListener implements ChannelAwareMessageListener {
 
     @Override
     public void onMessage(Message message, Channel channel) throws Exception {
-        String body = RabbitMessageHelper.convertBodyToString(message.getBody(), listener.getCharset(), defaultCharset);
+        String body = RabbitMessageHelper.convertBodyToString(message.getBody(), defaultCharset);
         logger.debug(MessageFormat.format("Begin consume '{0}'.", body));
         boolean rst;
         try {

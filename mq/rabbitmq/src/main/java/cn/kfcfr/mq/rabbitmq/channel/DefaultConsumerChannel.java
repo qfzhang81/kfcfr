@@ -1,5 +1,6 @@
 package cn.kfcfr.mq.rabbitmq.channel;
 
+import cn.kfcfr.mq.rabbitmq.Receiver;
 import cn.kfcfr.mq.rabbitmq.helper.RabbitMessageHelper;
 import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryData;
 import cn.kfcfr.mq.rabbitmq.listener.ConsumerDeliveryListener;
@@ -13,7 +14,7 @@ import java.text.MessageFormat;
  * Created by zhangqf77 on 2018/5/23.
  */
 @SuppressWarnings(value = {"unchecked", "WeakerAccess"})
-public class DefaultConsumerChannel extends AbstractChannel implements ConsumerChannel {
+public class DefaultConsumerChannel extends AbstractChannel implements Receiver {
     protected boolean autoAck;
     protected ConsumerDeliveryListener listener;
     protected Charset charset;
