@@ -15,6 +15,8 @@ import java.util.List;
  * Created by zhangqf77 on 2018/7/13.
  */
 public class TestSender extends Thread {
+    private final static String EXCHANGE_DELAY_WAIT = "test_topic_delay_wait";
+    private final static String EXCHANGE_DELAY_REDIRECT = "test_topic_delay_redirect";
     private final static String EXCHANGE_NAME = "test_topic_hello";
     private final static String QUEUE_NAME_ALL = "test_topic_hello_world_all";
     private final static String QUEUE_NAME_369 = "test_topic_hello_world_369";
@@ -23,10 +25,12 @@ public class TestSender extends Thread {
         ConnectionFactory factory = MqFactory.createFactory("27.115.67.203", 40066, "ittestuser", "1qaz@WSX", "it");
         try {
             //创建交换机和队列
+            MqFactory.createDirectExchange(factory, EXCHANGE_DELAY_WAIT);
+            MqFactory.createDirectExchange(factory, EXCHANGE_DELAY_REDIRECT);
             MqFactory.createTopicExchange(factory, EXCHANGE_NAME);
             MqFactory.createQueue(factory, QUEUE_NAME_ALL);
             MqFactory.createQueueBind(factory, EXCHANGE_NAME, QUEUE_NAME_ALL, "hello.#");
-            MqFactory.createQueue(factory, QUEUE_NAME_369);
+            MqFactory.createQueue(factory, QUEUE_NAME_369, EXCHANGE_DELAY_WAIT, EXCHANGE_DELAY_REDIRECT, 300);
             MqFactory.createQueueBind(factory, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.3.#");
             MqFactory.createQueueBind(factory, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.6.#");
             MqFactory.createQueueBind(factory, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.9.#");

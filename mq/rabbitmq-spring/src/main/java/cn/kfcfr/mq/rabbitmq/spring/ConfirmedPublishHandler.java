@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by zhangqf77 on 2018/6/19.
  */
-@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused"})
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "unused", "all"})
 public class ConfirmedPublishHandler<T extends AbstractMessage> extends AbstractMqHandler implements Publisher<T> {
     protected long waitForConfirmMillisecond;//确认时默认超时时间，毫秒
     protected boolean mandatory;
@@ -28,8 +28,6 @@ public class ConfirmedPublishHandler<T extends AbstractMessage> extends Abstract
     protected ConfirmCallBackListener confirmCallBackListener;
     protected ReturnCallBackListener returnCallBackListener;
     protected PublisherFailedListener failedListener;
-
-//    protected RabbitTemplate template;
 
     public ConfirmedPublishHandler(ConnectionFactory connectionFactory, String exchangeName, Charset charset, ConfirmCallBackListener confirmCallBackListener, ReturnCallBackListener returnCallBackListener, PublisherFailedListener failedListener) {
         this.connectionFactory = connectionFactory;
@@ -42,8 +40,8 @@ public class ConfirmedPublishHandler<T extends AbstractMessage> extends Abstract
         }
         this.confirmCallBackListener = confirmCallBackListener;
         this.returnCallBackListener = returnCallBackListener;
+        this.failedListener = failedListener;
         init();
-//        createTemplate();
     }
 
     protected void init() {
@@ -57,29 +55,6 @@ public class ConfirmedPublishHandler<T extends AbstractMessage> extends Abstract
         template.setExchange(exchangeName);
         return template;
     }
-
-//    protected void createTemplate2() {
-//        template = new RabbitTemplate(connectionFactory);
-//        template.setMandatory(mandatory);
-//        template.setExchange(exchangeName);
-//        if (confirmCallBackListener != null) {
-//            template.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
-//                public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-//                    logger.debug(MessageFormat.format("ConfirmCallback for confirm ''{1}'' when push ''{0}'', cause:{2}.", correlationData, ack, cause));
-//                    confirmCallBackListener.confirm(new ConfirmCallBackData(correlationData.getId(), ack, cause));
-//                }
-//            });
-//        }
-//        if (returnCallBackListener != null) {
-//            template.setReturnCallback(new RabbitTemplate.ReturnCallback() {
-//                public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-//                    logger.debug(MessageFormat.format("ReturnCallback for text:{0}. code:{1}. exchange:{2}. routingKey:{3}. message:{4}." + routingKey, replyText, replyCode, exchange, routingKey, message));
-//                    String content = RabbitMessageHelper.convertBodyToString(message.getBody(), charset);
-//                    returnCallBackListener.returnedMessage(new ReturnCallBackData(content, replyCode, replyText, exchange, routingKey));
-//                }
-//            });
-//        }
-//    }
 
     public boolean publishSingle(T message) {
         return publishSingle(message, waitForConfirmMillisecond);

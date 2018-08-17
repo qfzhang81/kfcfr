@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug" monitorInterval="30">
+       <appenders>
+              <Console name="stdout" target="SYSTEM_OUT">
+                     <PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss}[%p][%C{1}] %m%n"/>
+              </Console>
+       </appenders>
+       <loggers>
+              <root level="debug">
+                     <appender-ref ref="stdout"/>
+              </root>
+       </loggers>
+</configuration>

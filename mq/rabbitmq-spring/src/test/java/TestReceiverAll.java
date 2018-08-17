@@ -10,7 +10,7 @@ public class TestReceiverAll extends Thread {
     public void run() {
         org.springframework.amqp.rabbit.connection.ConnectionFactory factory = MqSpringFactory.createFactory("27.115.67.203", 40066, "ittestuser", "1qaz@WSX", "it");
         try {
-            DefaultConsumeHandler handler = new DefaultConsumeHandler(factory, new TestConsumeHelloListener(QUEUE_NAME_ALL), QUEUE_NAME_ALL);
+            DefaultConsumeHandler handler = new DefaultConsumeHandler(factory, null, new TestConsumeHelloListener(QUEUE_NAME_ALL), QUEUE_NAME_ALL);
             handler.start();
         }
         catch (Exception e) {

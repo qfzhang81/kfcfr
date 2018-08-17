@@ -23,7 +23,7 @@ public class HandlerFactory {
         return new ConfirmedPublishHandler<>(connectionFactory, exchangeName, charset, confirmCallBackListener, returnCallBackListener, failedListener);
     }
 
-    public static Receiver createDefaultConsumer(ConnectionFactory connectionFactory, ConsumerDeliveryListener listener, String... queueNames) {
-        return new DefaultConsumeHandler(connectionFactory, listener, queueNames);
+    public static Receiver createDefaultConsumer(ConnectionFactory connectionFactory, Charset charset, ConsumerDeliveryListener listener, String... queueNames) {
+        return new DefaultConsumeHandler(connectionFactory, charset, listener, queueNames);
     }
 }

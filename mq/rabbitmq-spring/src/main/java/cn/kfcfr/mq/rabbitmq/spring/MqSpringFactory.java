@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Created by zhangqf77 on 2018/7/5.
  */
+@SuppressWarnings(value = {"unchecked", "WeakerAccess", "all"})
 public class MqSpringFactory {
     public static CachingConnectionFactory createFactory(String host, Integer port, String username, String password, String virtualHost) {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
@@ -55,11 +56,11 @@ public class MqSpringFactory {
         return queue;
     }
 
-    public static void createQueueBind(RabbitAdmin admin, Queue queue, Exchange exchange, String routingKey) {
+    public static void createQueueBind(RabbitAdmin admin, Exchange exchange, Queue queue, String routingKey) {
         createQueueBind(admin, queue.getName(), exchange.getName(), routingKey);
     }
 
-    public static void createQueueBind(RabbitAdmin admin, String queueName, String exchangeName, String routingKey) {
+    public static void createQueueBind(RabbitAdmin admin, String exchangeName, String queueName, String routingKey) {
         Binding binding = new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, routingKey, null);
         admin.declareBinding(binding);
     }

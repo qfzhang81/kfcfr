@@ -3,14 +3,11 @@ import cn.kfcfr.mq.rabbitmq.message.TopicMessage;
 import cn.kfcfr.mq.rabbitmq.spring.HandlerFactory;
 import cn.kfcfr.mq.rabbitmq.spring.MqSpringFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by zhangqf77 on 2018/7/13.
@@ -22,21 +19,21 @@ public class TestSender extends Thread {
 
     public void run() {
         ConnectionFactory factory = MqSpringFactory.createFactory("27.115.67.203", 40066, "ittestuser", "1qaz@WSX", "it");
-        try {
-            //创建交换机和队列
-            RabbitAdmin admin = new RabbitAdmin(factory);
-            MqSpringFactory.createTopicExchange(admin, EXCHANGE_NAME);
-            MqSpringFactory.createQueue(admin, QUEUE_NAME_ALL);
-            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_ALL, "hello.#");
-            MqSpringFactory.createQueue(admin, QUEUE_NAME_369);
-            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.3.#");
-            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.6.#");
-            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.9.#");
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return;
-        }
+//        try {
+//            //创建交换机和队列
+//            RabbitAdmin admin = new RabbitAdmin(factory);
+//            MqSpringFactory.createTopicExchange(admin, EXCHANGE_NAME);
+//            MqSpringFactory.createQueue(admin, QUEUE_NAME_ALL);
+//            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_ALL, "hello.#");
+//            MqSpringFactory.createQueue(admin, QUEUE_NAME_369);
+//            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.3.#");
+//            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.6.#");
+//            MqSpringFactory.createQueueBind(admin, EXCHANGE_NAME, QUEUE_NAME_369, "hello.#.9.#");
+//        }
+//        catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return;
+//        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         try {
@@ -49,7 +46,7 @@ public class TestSender extends Thread {
                 TopicMessage message = new TopicMessage(MessageFormat.format("Single, Hello World! Num: {0}", num), routingKey);
                 handler.publishSingle(message);
                 System.out.println(MessageFormat.format("{0}[{3}] Sent seq = {1} with routing key = {2}", sdf.format(new Date()), num, routingKey, this.getId()));
-                if (num >= 100) break;
+                if (num >= 3) break;
                 try {
                     if (num % 30 == 0) {
                         Thread.sleep(2000);
@@ -59,18 +56,18 @@ public class TestSender extends Thread {
                     e.printStackTrace();
                 }
             }
-            Thread.sleep(10000);
-            System.out.println("Test send batch.");
-            num = 0;
-            List<TopicMessage> list = new ArrayList<>();
-            while (true) {
-                num++;
-                String routingKey = "hello." + num % 10;
-                TopicMessage message = new TopicMessage(MessageFormat.format("Batch, Hello World! Num: {1}", num), routingKey);
-                list.add(message);
-                if (num >= 200) break;
-            }
-            handler.publishBatch(list);
+//            Thread.sleep(10000);
+//            System.out.println("Test send batch.");
+//            num = 0;
+//            List<TopicMessage> list = new ArrayList<>();
+//            while (true) {
+//                num++;
+//                String routingKey = "hello." + num % 10;
+//                TopicMessage message = new TopicMessage(MessageFormat.format("Batch, Hello World! Num: {1}", num), routingKey);
+//                list.add(message);
+//                if (num >= 200) break;
+//            }
+//            handler.publishBatch(list);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
