@@ -1,5 +1,6 @@
 package cn.kfcfr.ztestcommon.controller;
 
+import cn.kfcfr.core.math.DateCalc;
 import cn.kfcfr.core.pagination.PagedBounds;
 import cn.kfcfr.core.pagination.PagedList;
 import cn.kfcfr.core.pagination.SortCondition;
@@ -97,6 +98,12 @@ public class UserController {
         HttpStatus httpStatus;
         List<PropertyCondition> searchConditions = null;
         PagedBounds pagedBounds = null;
+
+        String aa = "201801";
+        String bb = DateCalc.calcPreviousMonth(aa,"yyyyMM");
+        String cc = bb.toString();
+
+
         if (transfer != null) {
             searchConditions = transfer.getSearchConditions();
             pagedBounds = transfer.getPagedBounds();

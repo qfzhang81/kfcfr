@@ -34,7 +34,7 @@ jdbc:
       type: com.alibaba.druid.pool.DruidDataSource
       writer:
         driverClassName: 'com.mysql.jdbc.Driver'
-        url: 'jdbc:mysql://localhost:3306/demoprimary?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8'
+        url: 'jdbc:mysql://localhost:3306/demoprimary?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8&useSSL=false'
         username: primaryuser
         password: 123456
         initialSize: 2
@@ -53,7 +53,7 @@ jdbc:
         filters: stat
       reader1:
         driverClassName: 'com.mysql.jdbc.Driver'
-        url: 'jdbc:mysql://localhost:3306/demoimage?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8'
+        url: 'jdbc:mysql://localhost:3306/demoimage?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8&useSSL=false'
         username: imageuser
         password: 123456
         initialSize: 2
@@ -74,7 +74,7 @@ jdbc:
       type: com.alibaba.druid.pool.DruidDataSource
       writer:
         driverClassName: 'com.mysql.jdbc.Driver'
-        url: 'jdbc:mysql://localhost:3306/demosecond?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8'
+        url: 'jdbc:mysql://localhost:3306/demosecond?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8&useSSL=false'
         username: seconduser
         password: 123456
         initialSize: 2
